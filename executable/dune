@@ -1,0 +1,6 @@
+(executable (name ReasonGuestLoginOidcClientApp)
+    (public_name ReasonGuestLoginOidcClientApp.exe)
+    (libraries lwt reason-guest-login-oidc-client.library
+        reason-guest-login-oidc-client.http
+        reason-guest-login-oidc-client.oidc)
+    (package reason-guest-login-oidc-client) (ocamlopt_flags -O3)) (env (docker (flags (:standard -ccopt -static -verbose)))) 

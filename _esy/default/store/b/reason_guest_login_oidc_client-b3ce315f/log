@@ -1,0 +1,5 @@
+# /Users/ulrik.strid/.esy/3_____________________________________________________________/i/opam__s__dune-opam__c__1.11.0-9ca81c81/bin/dune build -p reason-guest-login-oidc-client
+# OCAMLPARAM: unset
+$ /usr/bin/getconf _NPROCESSORS_ONLN > /tmp/dune88f7d6.output 2> /dev/null
+$ /Users/ulrik.strid/.esy/3_____________________________________________________________/i/opam__s__ocamlfind-opam__c__1.8.0-73def3c9/bin/ocamlfind printconf path > /tmp/dunea42c4f.output
+$ /Users/ulrik.strid/.esy/3_____________________________________________________________/i/ocaml-4.7.1004-e5a2754f/bin/ocamlc.opt -config > /tmp/dunee5660d.output

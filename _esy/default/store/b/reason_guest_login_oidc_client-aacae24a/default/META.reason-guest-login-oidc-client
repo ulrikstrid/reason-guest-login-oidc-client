@@ -1,0 +1,9 @@
+package "library" (
+  directory = "library"
+  description = ""
+  requires = ""
+  archive(byte) = "Library.cma"
+  archive(native) = "Library.cmxa"
+  plugin(byte) = "Library.cma"
+  plugin(native) = "Library.cmxs"
+)

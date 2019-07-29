@@ -1,0 +1,161 @@
+(lang dune 1.11)
+(name reason-guest-login-oidc-client)
+(library
+ (name reason-guest-login-oidc-client.http)
+ (kind normal)
+ (orig_src_dir
+  /Users/ulrik.strid/Projects/private/reason-guest-login-oidc-client/Http)
+ (archives (byte http/Http.cma) (native http/Http.cmxa))
+ (plugins (byte http/Http.cma) (native http/Http.cmxs))
+ (foreign_archives (native http/Http.a))
+ (requires lwt logs uri str containers httpaf httpaf-lwt-unix h2 h2-lwt-unix)
+ (main_module_name Http)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Http)
+   (modules
+    ((name Body) (obj_name http__Body) (visibility public) (impl))
+    ((name Cookie) (obj_name http__Cookie) (visibility public) (impl))
+    ((name H2_handler) (obj_name http__H2_handler) (visibility public) (impl))
+    ((name Http1_handler)
+     (obj_name http__Http1_handler)
+     (visibility public)
+     (impl))
+    ((name HttpImpl) (obj_name http__HttpImpl) (visibility public) (impl))
+    ((name Method) (obj_name http__Method) (visibility public) (impl))
+    ((name Response) (obj_name http__Response) (visibility public) (impl))
+    ((name Server) (obj_name http__Server) (visibility public) (impl))
+    ((name UrlencodedForm)
+     (obj_name http__UrlencodedForm)
+     (visibility public)
+     (impl)
+     (intf)))
+   (alias_module
+    (name Http)
+    (obj_name http)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))
+(library
+ (name reason-guest-login-oidc-client.jose)
+ (kind normal)
+ (orig_src_dir
+  /Users/ulrik.strid/Projects/private/reason-guest-login-oidc-client/jose)
+ (archives (byte jose/Jose.cma) (native jose/Jose.cmxa))
+ (plugins (byte jose/Jose.cma) (native jose/Jose.cmxs))
+ (foreign_archives (native jose/Jose.a))
+ (requires containers yojson nocrypto x509 base64 zarith hex)
+ (main_module_name Jose)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Jose)
+   (modules
+    ((name Jwk) (obj_name jose__Jwk) (visibility public) (impl) (intf))
+    ((name Jwks) (obj_name jose__Jwks) (visibility public) (impl))
+    ((name Jwt) (obj_name jose__Jwt) (visibility public) (impl) (intf)))
+   (alias_module
+    (name Jose)
+    (obj_name jose)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))
+(library
+ (name reason-guest-login-oidc-client.library)
+ (kind normal)
+ (orig_src_dir
+  /Users/ulrik.strid/Projects/private/reason-guest-login-oidc-client/library)
+ (archives (byte library/Library.cma) (native library/Library.cmxa))
+ (plugins (byte library/Library.cma) (native library/Library.cmxs))
+ (foreign_archives (native library/Library.a))
+ (requires
+  uri
+  str
+  lwt
+  reason-guest-login-oidc-client.http
+  reason-guest-login-oidc-client.routes)
+ (main_module_name Library)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Library)
+   (modules
+    ((name Router) (obj_name library__Router) (visibility public) (impl))
+    ((name Util) (obj_name library__Util) (visibility public) (impl)))
+   (alias_module
+    (name Library)
+    (obj_name library)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))
+(library
+ (name reason-guest-login-oidc-client.routes)
+ (kind normal)
+ (orig_src_dir
+  /Users/ulrik.strid/Projects/private/reason-guest-login-oidc-client/routes)
+ (archives (byte routes/Routes.cma) (native routes/Routes.cmxa))
+ (plugins (byte routes/Routes.cma) (native routes/Routes.cmxs))
+ (foreign_archives (native routes/Routes.a))
+ (requires reason-guest-login-oidc-client.http)
+ (main_module_name Routes)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Routes)
+   (modules
+    ((name FourOhFour)
+     (obj_name routes__FourOhFour)
+     (visibility public)
+     (impl)))
+   (alias_module
+    (name Routes)
+    (obj_name routes)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))
+(library
+ (name reason-guest-login-oidc-client.oidc)
+ (kind normal)
+ (orig_src_dir
+  /Users/ulrik.strid/Projects/private/reason-guest-login-oidc-client/oidc)
+ (archives (byte oidc/Oidc.cma) (native oidc/Oidc.cmxa))
+ (plugins (byte oidc/Oidc.cma) (native oidc/Oidc.cmxs))
+ (foreign_archives (native oidc/Oidc.a))
+ (requires
+  lwt
+  logs
+  uri
+  yojson
+  str
+  containers
+  reason-guest-login-oidc-client.jose)
+ (main_module_name Oidc)
+ (modes byte native)
+ (modules
+  (wrapped
+   (main_module_name Oidc)
+   (modules
+    ((name Claims) (obj_name oidc__Claims) (visibility public) (impl))
+    ((name Client) (obj_name oidc__Client) (visibility public) (impl))
+    ((name Discover) (obj_name oidc__Discover) (visibility public) (impl))
+    ((name Parameters)
+     (obj_name oidc__Parameters)
+     (visibility public)
+     (impl)
+     (intf))
+    ((name Provider) (obj_name oidc__Provider) (visibility public) (impl))
+    ((name Scopes) (obj_name oidc__Scopes) (visibility public) (impl) (intf))
+    ((name States) (obj_name oidc__States) (visibility public) (impl))
+    ((name User) (obj_name oidc__User) (visibility public) (impl)))
+   (alias_module
+    (name Oidc)
+    (obj_name oidc)
+    (visibility public)
+    (kind alias)
+    (impl))
+   (wrapped true))))

@@ -1,0 +1,20 @@
+(** @canonical Oidc.Claims *)
+module Claims = Oidc__Claims
+
+(** @canonical Oidc.Client *)
+module Client = Oidc__Client
+
+(** @canonical Oidc.Discover *)
+module Discover = Oidc__Discover
+
+(** @canonical Oidc.Parameters *)
+module Parameters = Oidc__Parameters
+
+(** @canonical Oidc.Provider *)
+module Provider = Oidc__Provider
+
+(** @canonical Oidc.Scopes *)
+module Scopes = Oidc__Scopes
+
+(** @canonical Oidc.States *)
+module States = Oidc__States

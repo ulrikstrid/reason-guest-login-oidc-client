@@ -1,0 +1,2 @@
+(** @canonical Routes.FourOhFour *)
+module FourOhFour = Routes__FourOhFour

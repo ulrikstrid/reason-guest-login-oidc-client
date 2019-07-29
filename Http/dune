@@ -1,0 +1,3 @@
+(library (name Http) (public_name reason-guest-login-oidc-client.http)
+    (libraries lwt logs uri str containers httpaf httpaf-lwt-unix h2
+        h2-lwt-unix)) 

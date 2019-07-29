@@ -1,0 +1,2 @@
+(** @canonical Library.Util *)
+module Util = Library__Util
