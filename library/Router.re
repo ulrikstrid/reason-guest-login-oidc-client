@@ -1,9 +1,8 @@
-let make_callback = (~httpImpl, ~context: 'a, reqd) => {
+let make_callback = (~httpImpl, ~context: Oidc.Discover.t, reqd) => {
   open Http.HttpImpl;
 
   let req_uri = httpImpl.target |> Uri.of_string;
   let req_path = Uri.path(req_uri);
-  print_endline(req_path);
   let path_parts = CCString.split(~by="/", req_path) |> CCList.drop(1);
 
   switch (httpImpl.meth, path_parts) {

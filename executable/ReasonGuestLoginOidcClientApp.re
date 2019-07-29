@@ -5,12 +5,9 @@ Lwt.bind(
     "/.well-known/openid-configuration",
   ),
   ({body, _}) => {
-    Oidc.Discover.from_string(body)
-    |> (
-      ({authorization_endpoint, _}) => print_endline(authorization_endpoint)
-    );
+    let context = Oidc.Discover.from_string(body);
     Http.Server.start(
-      ~context=(),
+      ~context,
       ~make_routes_callback=Library.Router.make_callback,
       (),
     );

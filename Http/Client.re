@@ -9,7 +9,7 @@ let error_handler = _ => assert(false);
 
 let read_response = (~notify_finished, response, response_body) =>
   switch (response) {
-  | {Httpaf.Response.status: `OK, headers, _} as response =>
+  | {Httpaf.Response.status: `OK, headers, _} =>
     let content_length =
       Httpaf.Headers.get(headers, "content-length")
       |> CCOpt.flat_map(CCInt.of_string)

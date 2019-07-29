@@ -37,7 +37,8 @@
         "str",
         "lwt",
         "reason-guest-login-oidc-client/http",
-        "reason-guest-login-oidc-client/routes"
+        "reason-guest-login-oidc-client/routes",
+        "reason-guest-login-oidc-client/oidc"
       ]
     },
     "http": {
