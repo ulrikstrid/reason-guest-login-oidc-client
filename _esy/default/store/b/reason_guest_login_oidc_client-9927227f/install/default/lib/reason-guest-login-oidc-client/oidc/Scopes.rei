@@ -1,1 +1,0 @@
-../../../../../default/oidc/Scopes.rei

@@ -1,2 +1,0 @@
-(** @canonical Library.Router *)
-module Router = Library__Router
