@@ -1,7 +1,7 @@
 Lwt.bind(
   Http.Client.get(
     443,
-    "eid-development.xenit.se",
+    Sys.getenv("PROVIDER_HOST"),
     "/.well-known/openid-configuration",
   ),
   ({body, _}) => {
