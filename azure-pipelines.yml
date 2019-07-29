@@ -39,6 +39,9 @@ stages:
                     --tag $(dockerId)/$(imageName)-builder:latest .
             displayName: "Build builder stage"
 
+          - script: docker save $(dockerId)/$(imageName)-builder:latest $(docker history -q $(dockerId)/$(imageName)-builder:latest | grep -v "<missing>") -o $(Build.ArtifactStagingDirectory)/docker_cache.tar
+            displayName: Save docker cache
+
           # Build the runtime stage, using cached compile stage:
           - script: |
               docker build \
