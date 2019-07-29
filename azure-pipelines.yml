@@ -27,7 +27,7 @@ stages:
               key: |
                 ReasonGuestLoginOidcClient
                 docker
-                docker-cache.json
+                $(Build.SourcesDirectory)/docker-cache.json
               path: $(Pipeline.Workspace)/docker-cache
             displayName: Cache Docker image
 
