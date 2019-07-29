@@ -20,6 +20,8 @@ stages:
           - script: docker login -u $(dockerId) -p $(dockerPassword)
             displayName: "Login to docker"
 
+          - script: mkdir -p $(Pipeline.Workspace)/docker-cache
+
           - task: CacheBeta@0
             inputs:
               key: |
