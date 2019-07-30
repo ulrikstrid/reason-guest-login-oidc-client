@@ -6,6 +6,8 @@ let make_callback = (~httpImpl, ~context: Oidc.Discover.t, reqd) => {
   let path_parts = CCString.split(~by="/", req_path) |> CCList.drop(1);
 
   switch (httpImpl.meth, path_parts) {
+  | (_, ["success.txt"]) =>
+    Http.Response.Text.make(~httpImpl, ~text="success", reqd) |> Lwt.return
   | (_, [text]) =>
     Http.Response.Html.make(
       ~httpImpl,

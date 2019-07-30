@@ -19,6 +19,30 @@ module Ok = {
   };
 };
 
+module Text = {
+  let make = (~httpImpl, ~extra_headers=?, ~text, reqd) => {
+    let headers =
+      (
+        switch (extra_headers) {
+        | Some(h) => [
+            ("content-length", CCString.length(text) |> CCInt.to_string),
+            ...h,
+          ]
+        | None => [
+            ("content-length", CCString.length(text) |> CCInt.to_string),
+          ]
+        }
+      )
+      |> httpImpl.headers_of_list;
+    httpImpl.respond_with_string(
+      reqd,
+      httpImpl.create_response(~headers, `OK),
+      text,
+    );
+    ();
+  };
+};
+
 module Json = {
   let make = (~httpImpl, ~json, reqd) => {
     let content_length = json |> String.length |> string_of_int;
