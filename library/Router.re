@@ -3,9 +3,8 @@ let make_callback = (~httpImpl, ~context: Oidc.Discover.t, reqd) => {
 
   let req_uri = httpImpl.target |> Uri.of_string;
   let req_path = Uri.path(req_uri);
-  let path_parts = CCString.split(~by="/", req_path) |> CCList.drop(1);
-
-  Logs.app(m => m("target: %s", httpImpl.target));
+  let path_parts =
+    CCString.split(~by="/", req_path) |> CCList.filter(s => s != "");
 
   switch (httpImpl.meth, path_parts) {
   | (_, ["success.txt"]) =>
