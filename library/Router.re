@@ -5,6 +5,8 @@ let make_callback = (~httpImpl, ~context: Oidc.Discover.t, reqd) => {
   let req_path = Uri.path(req_uri);
   let path_parts = CCString.split(~by="/", req_path) |> CCList.drop(1);
 
+  Logs.app(m => m("target: %s", httpImpl.target));
+
   switch (httpImpl.meth, path_parts) {
   | (_, ["success.txt"]) =>
     Http.Response.Text.make(~httpImpl, ~text="success", reqd) |> Lwt.return

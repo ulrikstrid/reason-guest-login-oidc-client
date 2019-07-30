@@ -79,6 +79,9 @@
     "executable": {
       "require": [
         "lwt",
+        "logs",
+        "logs.fmt",
+        "fmt.tty",
         "reason-guest-login-oidc-client/library",
         "reason-guest-login-oidc-client/http",
         "reason-guest-login-oidc-client/oidc"
