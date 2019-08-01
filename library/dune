@@ -1,4 +1,4 @@
 (library (name Library) (public_name reason-guest-login-oidc-client.library)
-    (libraries uri str lwt reason-guest-login-oidc-client.http
+    (libraries uri str lwt uuidm reason-guest-login-oidc-client.http
         reason-guest-login-oidc-client.routes
         reason-guest-login-oidc-client.oidc)) 

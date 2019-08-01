@@ -18,16 +18,17 @@
         "rely.lib"
       ],
       "bin": {
-        "TestReasonGuestLoginOidcClient.exe": "RunTests.re"
+        "RunTests.exe": "RunTests.re"
       },
       "flags": [
-        "-linkall",
-        "-g",
+        ":standard",
         "-w",
         "-9"
       ],
       "rawBuildConfig": [
-        "(modules (:standard HttpTest TestFramework TestReasonGuestLoginOidcClient))"
+        "(ocamlopt_flags -linkall -g)",
+        "(package test-reason-guest-login-oidc-client)",
+        "(modules :standard RunTests HttpTest)"
       ]
     },
     "routes": {
@@ -40,6 +41,7 @@
         "uri",
         "str",
         "lwt",
+        "uuidm",
         "reason-guest-login-oidc-client/http",
         "reason-guest-login-oidc-client/routes",
         "reason-guest-login-oidc-client/oidc"
@@ -125,6 +127,7 @@
     "@opam/nocrypto": "*",
     "@opam/ssl": "*",
     "@opam/uri": "*",
+    "@opam/uuidm": "*",
     "@opam/x509": "0.6.3",
     "@opam/yojson": "*",
     "@opam/zarith": "*",

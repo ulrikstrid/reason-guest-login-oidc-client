@@ -21,6 +21,7 @@
     "@opam/nocrypto": "*",
     "@opam/ssl": "*",
     "@opam/uri": "*",
+    "@opam/uuidm": "*",
     "@opam/x509": "0.6.3",
     "@opam/yojson": "*",
     "@opam/zarith": "*",
