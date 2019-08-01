@@ -3,6 +3,7 @@ open Lwt.Infix;
 type response = {
   body: string,
   headers: list((string, string)),
+  cookies: list(Cookie.t),
 };
 
 let error_handler = _ => assert(false);
@@ -35,6 +36,10 @@ let read_response = (~notify_finished, response, response_body) => {
         {
           body: Buffer.contents(body_buffer),
           headers: Httpaf.Headers.to_list(headers),
+          cookies:
+            Httpaf.Headers.to_list(headers)
+            |> Cookie.get_set_cookie_headers
+            |> CCList.map(Cookie.get_cookie),
         },
       );
     };
@@ -72,12 +77,15 @@ let read_response = (~notify_finished, response, response_body) => {
         {
           body: Buffer.contents(body_buffer),
           headers: Httpaf.Headers.to_list(headers),
+          cookies:
+            Httpaf.Headers.to_list(headers)
+            |> Cookie.get_set_cookie_headers
+            |> CCList.map(Cookie.get_cookie),
         },
       );
     };
 
     Httpaf.Body.schedule_read(response_body, ~on_read, ~on_eof);
-  // exit(1);
   };
 };
 
@@ -116,7 +124,7 @@ let get = (~port, ~host, ~path, ()) => {
   );
 };
 
-let post_json_string = (~port=443, ~host, ~path, body) => {
+let post_json_string = (~port=443, ~host, ~path, ~headers=[], body) => {
   Lwt_unix.getaddrinfo(
     host,
     CCInt.to_string(port),
@@ -138,6 +146,7 @@ let post_json_string = (~port=443, ~host, ~path, body) => {
               ("Content-Type", "application/json"),
               ("Connection", "close"),
               ("Host", host),
+              ...headers,
             ]);
 
           let client =

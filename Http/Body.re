@@ -1,6 +1,4 @@
 let read = (~content_length, ~get_request_body, ~schedule_read, reqd) => {
-  open Lwt.Infix;
-
   let bodyBuffer = Buffer.create(content_length);
 
   let (bodyPromise, promiseResolver) = Lwt.wait();

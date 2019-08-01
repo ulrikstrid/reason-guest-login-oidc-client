@@ -13,17 +13,21 @@
   "buildDirs": {
     "test": {
       "require": [
+        "reason-guest-login-oidc-client/http",
         "reason-guest-login-oidc-client/library",
         "rely.lib"
       ],
       "bin": {
-        "TestReasonGuestLoginOidcClient.exe": "TestReasonGuestLoginOidcClient.re"
+        "TestReasonGuestLoginOidcClient.exe": "RunTests.re"
       },
       "flags": [
         "-linkall",
         "-g",
         "-w",
         "-9"
+      ],
+      "rawBuildConfig": [
+        "(modules (:standard HttpTest TestFramework TestReasonGuestLoginOidcClient))"
       ]
     },
     "routes": {
