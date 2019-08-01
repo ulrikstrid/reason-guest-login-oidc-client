@@ -89,7 +89,7 @@ let read_response = (~notify_finished, response, response_body) => {
   };
 };
 
-let get = (~port, ~host, ~path, ()) => {
+let get = (~port=443, ~host, ~path, ~headers=[], ()) => {
   Lwt_unix.getaddrinfo(
     host,
     CCInt.to_string(port),
@@ -103,8 +103,25 @@ let get = (~port, ~host, ~path, ()) => {
         () => {
           let (finished, notify_finished) = Lwt.wait();
           let response_handler = read_response(~notify_finished);
-          let headers = Httpaf.Headers.of_list([("host", host)]);
-          Httpaf_lwt_unix.Client.SSL.create_connection(socket)
+          let headers = Httpaf.Headers.of_list([("host", host), ...headers]);
+
+          let client =
+            Lwt_ssl.embed_uninitialized_socket(
+              socket,
+              Ssl.create_context(Ssl.TLSv1_2, Ssl.Client_context),
+            );
+
+          let () =
+            Ssl.set_client_SNI_hostname(
+              Lwt_ssl.ssl_socket_of_uninitialized_socket(client),
+              host,
+            );
+
+          Lwt_ssl.ssl_perform_handshake(client)
+          >>= (
+            client =>
+              Httpaf_lwt_unix.Client.SSL.create_connection(~client, socket)
+          )
           >>= (
             connection => {
               let request_body =
