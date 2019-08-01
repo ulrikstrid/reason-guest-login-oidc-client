@@ -13,18 +13,12 @@ Http.Client.get(
 )
 >>= (
   discover_response => {
-    Http.Client.(
-      Http.Server.start(
-        ~context=
-          _cookie =>
-            Context.{
-              discovery: Oidc.Discover.from_string(discover_response.body),
-              set_session: Context.set_session,
-              get_session: Context.get_session,
-            },
-        ~make_routes_callback=Router.make_callback,
-        (),
-      )
+    let discovery = Oidc.Discover.from_string(discover_response.body);
+
+    Http.Server.start(
+      ~context=Context.make_context(~discovery, ()),
+      ~make_routes_callback=Router.make_callback,
+      (),
     );
   }
 )
