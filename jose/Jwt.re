@@ -118,12 +118,12 @@ let sign = (header, key, payload) => {
      });
 };
 
-let to_string = t => {
+let _to_string = t => {
   t.header_str ++ "." ++ t.payload_str ++ "." ++ t.signature;
 };
 
 let from_string = token => {
-  CCString.split(".", token)
+  CCString.split(~by=".", token)
   |> (
     fun
     | [header_str, payload_str, signature] => {
@@ -212,7 +212,7 @@ let verify = (~jwks: list(Jwk.t), t) => {
        module Json = Yojson.Basic.Util;
        switch (Json.member("exp", payload) |> Json.to_int_option) {
        | Some(exp) when exp > int_of_float(Unix.time()) => Ok(t)
-       | Some(exp) => Error(`Msg("Token expired"))
+       | Some(_exp) => Error(`Msg("Token expired"))
        | None => Error(`Msg({|No "exp" key found|}))
        };
      });
