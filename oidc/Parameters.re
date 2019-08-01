@@ -120,7 +120,7 @@ let parse_query = (~clients, uri) => {
         getQueryParam("prompt") |> CCOpt.flat_map(string_to_prompt_opt),
     })
   | (Ok(client), Ok(_), _, Some(_)) => UnauthorizedClient(client)
-  | (Ok(client), Error(e), _, _) => InvalidWithClient(client)
+  | (Ok(client), Error(_e), _, _) => InvalidWithClient(client)
   | (Ok(client), _, _, None) => InvalidScope(client)
   | (_, _, Ok(redirect_uri), _) => InvalidWithRedirectUri(redirect_uri)
   | (Error(client_id_msg), Ok(_), Error(redirect_uri_msg), _) =>
