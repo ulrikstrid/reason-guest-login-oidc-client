@@ -83,13 +83,6 @@ let get_client = (~clients, ~client_id, ()) => {
 let parse_query = (~clients, uri) => {
   let getQueryParam = Uri.get_query_param(uri);
 
-  Logs.app(m =>
-    m(
-      "claims: %s",
-      getQueryParam("claims") |> CCOpt.get_or(~default="no_claims"),
-    )
-  );
-
   let claims =
     getQueryParam("claims") |> CCOpt.map(Yojson.Basic.from_string);
 

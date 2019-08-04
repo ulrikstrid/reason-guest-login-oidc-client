@@ -48,18 +48,11 @@ let make = (~httpImpl, ~context, ~req_uri, ~sitekey, reqd) => {
           prompt: None,
         };
 
-      Logs.app(m => m("redirect_uri: %s", Sys.getenv("OIDC_REDIRECT_URI")));
-
       let query = Oidc.Parameters.to_query(paremeters);
-
-      Logs.app(m => m("query: %s", query));
 
       Http.Response.Redirect.make(
         ~httpImpl,
         ~targetPath=context.discovery.authorization_endpoint ++ query,
-        ~extra_headers=[
-          ("Set-Cookie", "portal_session=" ++ cookie_key ++ " ;Max-Age=300"),
-        ],
         reqd,
       );
     | _ =>

@@ -6,8 +6,6 @@ let make_callback = (~httpImpl, ~context: Context.t, reqd) => {
   let path_parts =
     CCString.split(~by="/", req_path) |> CCList.filter(s => s != "");
 
-  Logs.info(m => m("Full target: %s", httpImpl.target));
-
   switch (httpImpl.meth, path_parts) {
   | (_, ["success.txt"]) =>
     Http.Response.Text.make(~httpImpl, ~text="success", reqd) |> Lwt.return
