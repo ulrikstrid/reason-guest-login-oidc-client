@@ -39,6 +39,26 @@ type t = {
   prompt: option(prompt),
 };
 
+let to_query = t => {
+  "?"
+  ++ (
+    [
+      Some(("response_type", t.response_type)),
+      Some(("client_id", [t.client.id])),
+      Some(("redirect_uri", [t.redirect_uri])),
+      Some(("scope", [CCString.concat(" ", t.scope)])),
+      CCOpt.map(state => ("state", [state]), t.state),
+      Some(("nonce", [t.nonce])),
+      CCOpt.map(
+        claims => {("claims", [claims |> Yojson.Basic.to_string])},
+        t.claims,
+      ),
+    ]
+    |> CCList.filter_map(a => a)
+    |> Uri.encoded_of_query
+  );
+};
+
 type parse_state =
   | Invalid(string)
   | UnauthorizedClient(Client.t)

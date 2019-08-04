@@ -4,7 +4,8 @@
     (ocamlopt_flags -linkall -g)
     (flags (:standard -w -9))
     (libraries reason-guest-login-oidc-client.http
-        reason-guest-login-oidc-client.library rely.lib)
+        reason-guest-login-oidc-client.library
+        reason-guest-login-oidc-client.oidc rely.lib)
     (modules
         (:standard \ RunTests)))
 

@@ -31,4 +31,5 @@ type parse_state =
   | InvalidWithRedirectUri(string)
   | Valid(t);
 
+let to_query: t => string;
 let parse_query: (~clients: list(Client.t), Uri.t) => parse_state;
