@@ -206,3 +206,68 @@ let post_json_string = (~port=443, ~host, ~path, ~headers=[], body) => {
     }
   );
 };
+
+let post_string = (~port=443, ~host, ~path, ~headers=[], body) => {
+  Lwt_unix.getaddrinfo(
+    host,
+    CCInt.to_string(port),
+    [Unix.(AI_FAMILY(PF_INET))],
+  )
+  >>= (
+    addresses => {
+      let socket = Lwt_unix.socket(Unix.PF_INET, Unix.SOCK_STREAM, 0);
+
+      Lwt_unix.connect(socket, CCList.hd(addresses).Unix.ai_addr)
+      >>= (
+        () => {
+          let (finished, notify_finished) = Lwt.wait();
+          let response_handler = read_response(~notify_finished);
+
+          let headers =
+            Httpaf.Headers.of_list([
+              ("Content-Length", CCInt.to_string(String.length(body))),
+              ("Connection", "close"),
+              ("Host", host),
+              ...headers,
+            ]);
+
+          let client =
+            Lwt_ssl.embed_uninitialized_socket(
+              socket,
+              Ssl.create_context(Ssl.TLSv1_2, Ssl.Client_context),
+            );
+
+          let () =
+            Ssl.set_client_SNI_hostname(
+              Lwt_ssl.ssl_socket_of_uninitialized_socket(client),
+              host,
+            );
+
+          Lwt_ssl.ssl_perform_handshake(client)
+          >>= (
+            client =>
+              Httpaf_lwt_unix.Client.SSL.create_connection(
+                ~client,
+                Lwt_ssl.get_fd(client),
+              )
+              >>= (
+                connection => {
+                  let request_body =
+                    Httpaf_lwt_unix.Client.SSL.request(
+                      connection,
+                      ~error_handler,
+                      ~response_handler,
+                      Httpaf.Request.create(~headers, `POST, path),
+                    );
+
+                  Httpaf.Body.write_string(request_body, body);
+                  Httpaf.Body.close_writer(request_body);
+                  finished;
+                }
+              )
+          );
+        }
+      );
+    }
+  );
+};
