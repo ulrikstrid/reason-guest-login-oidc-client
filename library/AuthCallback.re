@@ -43,7 +43,11 @@ let make = (~httpImpl, ~context, ~req_uri, reqd) => {
           ~port=443,
           ~host=Sys.getenv("CONTROLLER_HOST"),
           ~path="/api/login",
-          {|{"username":"test","password":"test"}|},
+          Printf.sprintf(
+            {|{"username":"%s","password":"%s"}|},
+            Sys.getenv("UNIFI_API_USERNAME"),
+            Sys.getenv("UNIFI_API_PASSWORD"),
+          ),
         )
         >>= (
           login_response => {
