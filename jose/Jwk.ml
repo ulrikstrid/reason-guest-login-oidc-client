@@ -1,21 +1,21 @@
 type t = {
-  alg: string;
+  alg: string option;
   kty: string;
-  use: string;
+  use: string option;
   n: string;
   e: string;
   kid: string;
-  x5t: string;
+  x5t: string option;
 }
 
 let empty = {
-  alg = "";
+  alg = None;
   kty = "";
-  use = "";
+  use = None;
   n = "";
   e = "";
   kid = "";
-  x5t = "";
+  x5t = None;
 }
 
 let trim_leading_null s =
@@ -42,25 +42,48 @@ let make (rsa_pub: Nocrypto.Rsa.pub): (t, [ `Msg of string]) result  =
     match (n, e, kid, x5t) with
     | (Ok n, Ok e, Ok kid, Ok x5t) ->
       Ok {
-        alg = "RS256";
+        alg = Some "RS256";
         kty = "RSA";
-        use = "sig";
+        use = Some "sig";
         n =  n;
         e = e;
         kid = kid;
-        x5t = x5t;
+        x5t = Some x5t;
+      }
+    | (Ok n, Ok e, Ok kid, _) ->
+      Ok {
+        alg = Some "RS256";
+        kty = "RSA";
+        use = Some "sig";
+        n =  n;
+        e = e;
+        kid = kid;
+        x5t = None;
       }
     | (Error (`Msg m), _, _, _) -> Error (`Msg ("n " ^ m))
     | (_, Error (`Msg m), _, _) -> Error (`Msg ("e " ^ m))
     | (_, _, Error (`Msg m), _) -> Error (`Msg ("kid " ^ m))
-    | (_, _, _, Error (`Msg m)) -> Error (`Msg ("x5t " ^ m))
+
+let to_json_from_opt = CCOpt.map_or ~default:`Null Yojson.Basic.from_string
 
 let to_json t = `Assoc [
-  ("alg", `String t.alg);
+  ("alg", to_json_from_opt t.alg);
   ("kty", `String t.kty);
-  ("use", `String t.use);
+  ("use", to_json_from_opt t.use);
   ("n", `String t.n);
   ("e", `String t.e);
   ("kid", `String t.kid);
-  ("x5t", `String t.x5t)
+  ("x5t", to_json_from_opt t.x5t)
 ]
+
+let from_json json = Yojson.Basic.Util.{
+  alg = json |> member "alg" |> to_string_option;
+  kty = json |> member "kty" |> to_string;
+  use = json |> member "use" |> to_string_option;
+  n = json |> member "n" |> to_string;
+  e = json |> member "e" |> to_string;
+  kid = json |> member "kid" |> to_string;
+  x5t = json |> member "x5t" |> to_string_option;
+}
+
+let from_string str = Yojson.Basic.from_string(str) |> from_json 
