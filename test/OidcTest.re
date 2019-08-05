@@ -8,7 +8,7 @@ describe("OIDC - Parameters", ({test}) => {
   let clients = [client];
 
   let base_url = "http://localhost:3000/authorize";
-  let valid_query = "?response_type=code&client_id=s6BhdRkqt3&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb&scope=openid%20profile&state=af0ifjsldkj&nonce=n-0S6_WzA2Mj";
+  let valid_query = "?response_type=code&client_id=s6BhdRkqt3&redirect_uri=https://client.example.org/cb&scope=openid%20profile&state=af0ifjsldkj&nonce=n-0S6_WzA2Mj";
 
   test("parseQuery", ({expect}) => {
     switch (
