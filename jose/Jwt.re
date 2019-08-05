@@ -51,7 +51,6 @@ let string_to_header = header_str => {
 
   base64_url_decode(header_str)
   |> CCResult.map(decoded_header => {
-       print_endline(decoded_header);
        Yojson.Basic.from_string(decoded_header)
        |> (
          json => {
@@ -67,7 +66,7 @@ let string_to_header = header_str => {
              Yojson.Basic.Util.member("kid", json)
              |> Yojson.Basic.Util.to_string,
          }
-       );
+       )
      });
 };
 
@@ -118,9 +117,8 @@ let sign = (header, key, payload) => {
      });
 };
 
-let _to_string = t => {
+let to_string = t =>
   t.header_str ++ "." ++ t.payload_str ++ "." ++ t.signature;
-};
 
 let from_string = token => {
   CCString.split(~by=".", token)
@@ -217,6 +215,3 @@ let verify = (~jwks: list(Jwk.t), t) => {
        };
      });
 };
-
-let to_string = t =>
-  t.header_str ++ "." ++ t.payload_str ++ "." ++ t.signature;
