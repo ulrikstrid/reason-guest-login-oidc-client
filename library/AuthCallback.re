@@ -1,17 +1,9 @@
 let make = (~httpImpl, ~context, ~req_uri, reqd) => {
-  open Http.HttpImpl;
-  open Lwt.Infix;
+  open Lwt_result.Infix;
   open Context;
 
   let code =
     Uri.get_query_param(req_uri, "code") |> CCOpt.get_or(~default="code");
-
-  let state =
-    Uri.get_query_param(req_uri, "state") |> CCOpt.get_or(~default="state");
-
-  let token_path =
-    context.discovery.token_endpoint |> Uri.of_string |> Uri.path;
-
   let token_data =
     Printf.sprintf(
       "grant_type=authorization_code&code=%s&redirect_uri=%s&client_id=%s&client_secret=%s",
@@ -21,33 +13,56 @@ let make = (~httpImpl, ~context, ~req_uri, reqd) => {
       Sys.getenv_opt("OIDC_SECRET") |> CCOpt.get_or(~default="secret"),
     );
 
-  Http.Client.post_string(
-    ~port=443,
-    ~host=
-      context.discovery.token_endpoint
-      |> Uri.of_string
-      |> Uri.host_with_default(~default=Sys.getenv("PROVIDER_HOST")),
-    ~path=token_path,
-    ~headers=[("Content-Type", "application/x-www-form-urlencoded")],
-    token_data,
+  Http.Client.fetch(context.discovery.jwks_uri)
+  >>= (
+    jwks_response =>
+      Http.Client.fetch(
+        ~meth=`POST,
+        ~headers=[("Content-Type", "application/x-www-form-urlencoded")],
+        ~body=token_data,
+        context.discovery.token_endpoint,
+      )
+      >>= (
+        token_response => {
+          open Http.Client;
+
+          let jwks = Jose.Jwks.from_string(jwks_response.body);
+          token_response.body
+          |> Yojson.Basic.from_string
+          |> Yojson.Basic.Util.member("id_token")
+          |> Yojson.Basic.Util.to_string
+          |> Jose.Jwt.from_string
+          |> CCResult.flat_map(Jose.Jwt.verify(~jwks=jwks.keys))
+          |> Lwt_result.lift;
+        }
+      )
   )
   >>= (
-    token_response => {
-      Logs.app(m => m("token_response.body: %s", token_response.body));
+    valid_id_token => {
+      Logs.app(m => m("id_token: %s", Jose.Jwt.to_string(valid_id_token)));
+
+      let state =
+        Uri.get_query_param(req_uri, "state")
+        |> CCOpt.get_or(~default="state");
 
       switch (context.get_session(state)) {
       | Some({auth_json, target_url, sitekey, _}) =>
-        let payload = Yojson.Basic.to_string(auth_json);
-
-        Http.Client.post_json_string(
-          ~port=443,
-          ~host=Sys.getenv("CONTROLLER_HOST"),
-          ~path="/api/login",
+        let login_body =
           Printf.sprintf(
             {|{"username":"%s","password":"%s"}|},
             Sys.getenv("UNIFI_API_USERNAME"),
             Sys.getenv("UNIFI_API_PASSWORD"),
-          ),
+          );
+        let login_url =
+          Printf.sprintf(
+            "https://%s/api/login",
+            Sys.getenv("CONTROLLER_HOST"),
+          );
+        Http.Client.fetch(
+          ~meth=`POST,
+          ~headers=[("Content-Type", "application/json")],
+          ~body=login_body,
+          login_url,
         )
         >>= (
           login_response => {
@@ -57,42 +72,58 @@ let make = (~httpImpl, ~context, ~req_uri, reqd) => {
               |> CCList.map(Http.Cookie.get_cookie)
               |> Http.Cookie.to_cookie_header;
 
-            Http.Client.post_json_string(
-              ~port=443,
-              ~host=Sys.getenv("CONTROLLER_HOST"),
-              ~path="/api/s/" ++ sitekey ++ "/cmd/stamgr",
-              ~headers=[cookie_header],
-              payload,
+            Http.Client.fetch(
+              ~meth=`POST,
+              ~headers=[("Content-Type", "application/json"), cookie_header],
+              ~body=Yojson.Basic.to_string(auth_json),
+              Printf.sprintf(
+                "https://%s/api/s/%s/cmd/stamgr",
+                Sys.getenv("CONTROLLER_HOST"),
+                sitekey,
+              ),
             )
             >>= (
-              accept_device_response => {
-                Http.Client.get(
-                  ~host=Sys.getenv("CONTROLLER_HOST"),
-                  ~path="/logout",
+              _accept_device_response => {
+                Http.Client.fetch(
                   ~headers=[cookie_header],
-                  (),
+                  Printf.sprintf(
+                    "https://%s/logout",
+                    Sys.getenv("CONTROLLER_HOST"),
+                  ),
                 );
               }
             );
           }
         )
-        >|= (
-          logout_response => {
+        >>= (
+          _logout_response => {
             Http.Response.Redirect.make(
               ~httpImpl,
               ~targetPath=target_url,
               reqd,
-            );
+            )
+            |> Lwt_result.return;
           }
         );
       | None =>
-        Http.Response.Redirect.make(
+        Http.Response.Unauthorized.make(
           ~httpImpl,
-          ~targetPath="www.google.com",
+          "Incorrect session value",
           reqd,
         )
-        |> Lwt.return
+        |> Lwt_result.return
       };
     }
+  )
+  |> (
+    x =>
+      Lwt.bind(x, result => {
+        switch (result) {
+        | Ok () => Lwt.return()
+        | Error(`Msg(message)) =>
+          Http.Response.Unauthorized.make(~httpImpl, message, reqd)
+          |> Lwt.return
+        }
+      })
   );
 };

@@ -139,7 +139,8 @@
     "@esy-packages/esy-openssl": "*"
   },
   "devDependencies": {
-    "@opam/merlin": "*"
+    "@opam/merlin": "*",
+    "@opam/ocamlformat": "*"
   },
   "resolutions": {
     "@opam/cstruct": "3.3.0",
