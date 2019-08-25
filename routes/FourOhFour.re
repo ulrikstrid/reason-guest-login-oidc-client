@@ -1,4 +1,4 @@
-open Http.HttpImpl;
+open Http.Request;
 
-let make = (~httpImpl, ~message=httpImpl.target ++ " not found", reqd) =>
-  Http.Response.NotFound.make(~httpImpl, ~message, reqd) |> Lwt.return;
+let make = (~request, ~message=request.target ++ " not found", ()) =>
+  Http.Response.NotFound.make(~message, ());

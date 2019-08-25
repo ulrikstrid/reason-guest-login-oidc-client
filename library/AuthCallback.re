@@ -1,4 +1,4 @@
-let make = (~httpImpl, ~context, ~req_uri, reqd) => {
+let make = (~context, req_uri) => {
   open Lwt_result.Infix;
   open Context;
 
@@ -97,21 +97,18 @@ let make = (~httpImpl, ~context, ~req_uri, reqd) => {
         )
         >>= (
           _logout_response => {
-            Http.Response.Redirect.make(
-              ~httpImpl,
-              ~targetPath=target_url,
-              reqd,
-            )
-            |> Lwt_result.return;
+            let content_length = target_url |> String.length |> string_of_int;
+            let headers = [
+              ("content-length", content_length),
+              ("location", target_url),
+            ];
+
+            Lwt_result.return(
+              Http.Response.make(~status=`Code(303), ~headers, target_url),
+            );
           }
         );
-      | None =>
-        Http.Response.Unauthorized.make(
-          ~httpImpl,
-          "Incorrect session value",
-          reqd,
-        )
-        |> Lwt_result.return
+      | None => Lwt_result.fail(`Msg("Incorrect session value"))
       };
     }
   )
@@ -119,10 +116,8 @@ let make = (~httpImpl, ~context, ~req_uri, reqd) => {
     x =>
       Lwt.bind(x, result => {
         switch (result) {
-        | Ok () => Lwt.return()
-        | Error(`Msg(message)) =>
-          Http.Response.Unauthorized.make(~httpImpl, message, reqd)
-          |> Lwt.return
+        | Ok(res) => Lwt.return(res)
+        | Error(`Msg(message)) => Http.Response.Unauthorized.make(message)
         }
       })
   );

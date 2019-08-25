@@ -1,16 +1,5 @@
-(library
-    (name TestReasonGuestLoginOidcClient)
-    (public_name test-reason-guest-login-oidc-client.lib)
-    (ocamlopt_flags -linkall -g)
-    (flags (:standard -w -9))
-    (libraries reason-guest-login-oidc-client.http
-        reason-guest-login-oidc-client.library
-        reason-guest-login-oidc-client.oidc rely.lib)
-    (modules
-        (:standard \ RunTests)))
-
-(test
+(test (name RunTests)
+    (libraries reason-guest-login-oidc-client.library rely.lib)
+    (flags :standard -w -9) (ocamlopt_flags -linkall -g)
     (package test-reason-guest-login-oidc-client)
-    (name RunTests)
-    (libraries test-reason-guest-login-oidc-client.lib)
-    (modules RunTests))
+    (modules :standard RunTests)) 

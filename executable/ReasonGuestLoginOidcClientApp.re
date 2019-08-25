@@ -12,19 +12,16 @@ Http.Client.fetch(
   ),
 )
 >>= (
-  discover_response => {
-    switch (discover_response) {
-    | Ok(discover_response) =>
+  fun
+  | Ok(discover_response) => {
       let discovery = Oidc.Discover.from_string(discover_response.body);
 
       Http.Server.start(
         ~context=Context.make_context(~discovery, ()),
-        ~make_routes_callback=Router.make_callback,
-        (),
+        Router.make_callback,
       );
-    | Error(`Msg(message)) =>
-      Logs.err(m => m("Discovery failed with: %s", message)) |> Lwt.return
-    };
-  }
+    }
+  | Error(`Msg(message)) =>
+    Logs.err(m => m("Discovery failed with: %s", message)) |> Lwt.return
 )
 |> Lwt_main.run;

@@ -13,7 +13,6 @@
   "buildDirs": {
     "test": {
       "require": [
-        "reason-guest-login-oidc-client/http",
         "reason-guest-login-oidc-client/library",
         "rely.lib"
       ],
@@ -28,12 +27,12 @@
       "rawBuildConfig": [
         "(ocamlopt_flags -linkall -g)",
         "(package test-reason-guest-login-oidc-client)",
-        "(modules :standard RunTests HttpTest)"
+        "(modules :standard RunTests)"
       ]
     },
     "routes": {
       "require": [
-        "reason-guest-login-oidc-client/http"
+        "http"
       ]
     },
     "library": {
@@ -136,7 +135,8 @@
     "ocaml": "~4.7.0",
     "pesy": "*",
     "@reason-native/rely": "*",
-    "@esy-packages/esy-openssl": "*"
+    "@esy-packages/esy-openssl": "*",
+    "@reason-native-web/http": "*"
   },
   "devDependencies": {
     "@opam/merlin": "*",
