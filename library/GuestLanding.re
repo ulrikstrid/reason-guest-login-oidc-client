@@ -46,9 +46,10 @@ let make = (~context, req_uri, sitekey) => {
 
     let query = Oidc.Parameters.to_query(paremeters);
 
-    Http.Response.Redirect.make(
+    Morph.Response.redirect(
       context.discovery.authorization_endpoint ++ query,
+      Morph.Response.empty,
     );
-  | _ => Http.Response.Text.make("id or url not provided")
+  | _ => Morph.Response.text("id or url not provided", Morph.Response.empty)
   };
 };

@@ -1,5 +1,5 @@
 let make = (~context, req_uri) => {
-  open Lwt_result.Infix;
+  open Lwt.Infix;
   open Context;
 
   let code =
@@ -13,21 +13,31 @@ let make = (~context, req_uri) => {
       Sys.getenv_opt("OIDC_SECRET") |> CCOpt.get_or(~default="secret"),
     );
 
-  Http.Client.fetch(context.discovery.jwks_uri)
+  Morph_client.handle(Morph.Request.make(context.discovery.jwks_uri))
   >>= (
     jwks_response =>
-      Http.Client.fetch(
-        ~meth=`POST,
-        ~headers=[("Content-Type", "application/x-www-form-urlencoded")],
-        ~body=token_data,
-        context.discovery.token_endpoint,
+      Morph_client.handle(
+        Morph.Request.make(
+          ~meth=`POST,
+          ~headers=[("Content-Type", "application/x-www-form-urlencoded")],
+          ~read_body=() => Lwt.return(token_data),
+          context.discovery.token_endpoint,
+        ),
       )
       >>= (
         token_response => {
-          open Http.Client;
-
-          let jwks = Jose.Jwks.from_string(jwks_response.body);
-          token_response.body
+          let jwks_response_body =
+            switch (jwks_response.body) {
+            | `String(body) => body
+            | _ => ""
+            };
+          let token_response_body =
+            switch (token_response.body) {
+            | `String(body) => body
+            | _ => ""
+            };
+          let jwks = Jose.Jwks.from_string(jwks_response_body);
+          token_response_body
           |> Yojson.Basic.from_string
           |> Yojson.Basic.Util.member("id_token")
           |> Yojson.Basic.Util.to_string
@@ -38,14 +48,17 @@ let make = (~context, req_uri) => {
       )
   )
   >>= (
-    valid_id_token => {
-      Logs.app(m => m("id_token: %s", Jose.Jwt.to_string(valid_id_token)));
+    _valid_id_token => {
+      // Logs.app(m => m("id_token: %s", Jose.Jwt.to_string(valid_id_token)));
 
       let state =
         Uri.get_query_param(req_uri, "state")
         |> CCOpt.get_or(~default="state");
 
       switch (context.get_session(state)) {
+      | None =>
+        Morph.Response.empty
+        |> Morph.Response.unauthorized("no valid session")
       | Some({auth_json, target_url, sitekey, _}) =>
         let login_body =
           Printf.sprintf(
@@ -58,67 +71,53 @@ let make = (~context, req_uri) => {
             "https://%s/api/login",
             Sys.getenv("CONTROLLER_HOST"),
           );
-        Http.Client.fetch(
+        Morph.Request.make(
           ~meth=`POST,
           ~headers=[("Content-Type", "application/json")],
-          ~body=login_body,
+          ~read_body=() => Lwt.return(login_body),
           login_url,
         )
+        |> Morph_client.handle
         >>= (
           login_response => {
             let cookie_header =
               login_response.headers
-              |> Http.Cookie.get_set_cookie_headers
-              |> CCList.map(Http.Cookie.get_cookie)
-              |> Http.Cookie.to_cookie_header;
+              |> Cookie.get_set_cookie_headers
+              |> CCList.map(Cookie.get_cookie)
+              |> Cookie.to_cookie_header;
 
-            Http.Client.fetch(
+            Morph.Request.make(
               ~meth=`POST,
               ~headers=[("Content-Type", "application/json"), cookie_header],
-              ~body=Yojson.Basic.to_string(auth_json),
+              ~read_body=
+                () => Yojson.Basic.to_string(auth_json) |> Lwt.return,
               Printf.sprintf(
                 "https://%s/api/s/%s/cmd/stamgr",
                 Sys.getenv("CONTROLLER_HOST"),
                 sitekey,
               ),
             )
+            |> Morph_client.handle
             >>= (
               _accept_device_response => {
-                Http.Client.fetch(
+                Morph.Request.make(
                   ~headers=[cookie_header],
                   Printf.sprintf(
                     "https://%s/logout",
                     Sys.getenv("CONTROLLER_HOST"),
                   ),
-                );
+                )
+                |> Morph_client.handle;
               }
             );
           }
         )
         >>= (
           _logout_response => {
-            let content_length = target_url |> String.length |> string_of_int;
-            let headers = [
-              ("content-length", content_length),
-              ("location", target_url),
-            ];
-
-            Lwt_result.return(
-              Http.Response.make(~status=`Code(303), ~headers, target_url),
-            );
+            Morph.Response.empty |> Morph.Response.redirect(target_url);
           }
         );
-      | None => Lwt_result.fail(`Msg("Incorrect session value"))
       };
     }
-  )
-  |> (
-    x =>
-      Lwt.bind(x, result => {
-        switch (result) {
-        | Ok(res) => Lwt.return(res)
-        | Error(`Msg(message)) => Http.Response.Unauthorized.make(message)
-        }
-      })
   );
 };

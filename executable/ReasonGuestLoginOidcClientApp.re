@@ -5,23 +5,27 @@ Fmt_tty.setup_std_outputs();
 Logs.set_level(Some(Logs.Info));
 Logs.set_reporter(Logs_fmt.reporter());
 
-Http.Client.fetch(
+let http_server = Morph_server_http.make();
+let discovery_url =
   Printf.sprintf(
     "https://%s/.well-known/openid-configuration",
     Sys.getenv("PROVIDER_HOST"),
-  ),
-)
->>= (
-  fun
-  | Ok(discover_response) => {
-      let discovery = Oidc.Discover.from_string(discover_response.body);
+  );
 
-      Http.Server.start(
-        ~context=Context.make_context(~discovery, ()),
-        Router.make_callback,
-      );
-    }
-  | Error(`Msg(message)) =>
-    Logs.err(m => m("Discovery failed with: %s", message)) |> Lwt.return
-)
-|> Lwt_main.run;
+let discovery_request = Morph.Request.make(~meth=`GET, discovery_url);
+
+Morph_client.handle(discovery_request)
+>>= (
+  response => {
+    let body =
+      switch (response.body) {
+      | `String(body) => body
+      | `Stream(_) => ""
+      };
+
+    let discovery = Oidc.Discover.from_string(body);
+    let context = Context.make(~discovery, ());
+
+    Morph.start(~servers=[http_server], Router.handler(~context));
+  }
+);

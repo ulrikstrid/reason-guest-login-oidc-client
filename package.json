@@ -39,7 +39,6 @@
         "Uri = require('uri')",
         "uuidm = require('yojson')",
         "Str = require('str')",
-        "Routes = require('reason-guest-login-oidc-client/routes')",
         "Oidc = require('reason-guest-login-oidc-client/oidc')"
       ]
     },
@@ -87,7 +86,8 @@
     }
   },
   "scripts": {
-    "test": "esy b dune runtest"
+    "test": "esy b dune runtest",
+    "format": "dune build @fmt --auto-promote --root ."
   },
   "dependencies": {
     "@opam/base64": "*",
@@ -110,6 +110,7 @@
     "@pesy/esy-pesy": "0.1.0-alpha.3",
     "@reason-native/rely": "*",
     "@reason-native-web/morph": "*",
+    "@reason-native-web/morph_client": "*",
     "@reason-native-web/morph_server_http": "*"
   },
   "devDependencies": {

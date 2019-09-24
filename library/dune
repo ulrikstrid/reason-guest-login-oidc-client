@@ -1,4 +1,3 @@
 (library (name Library) (public_name reason-guest-login-oidc-client.library)
-    (libraries uri str lwt uuidm reason-guest-login-oidc-client.http
-        reason-guest-login-oidc-client.routes
+    (libraries uri str lwt uuidm morph morph_client
         reason-guest-login-oidc-client.oidc)) 

@@ -23,7 +23,7 @@ type t = {
   delete_session: string => unit,
 };
 
-let make_context = (~discovery, ()) => {
+let make = (~discovery, ()) => {
   client: {
     id: Sys.getenv("OIDC_CLIENT_ID"),
     redirect_uri: Sys.getenv("OIDC_REDIRECT_URI"),
