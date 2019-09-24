@@ -12,9 +12,9 @@
   },
   "buildDirs": {
     "test": {
-      "require": [
-        "reason-guest-login-oidc-client/library",
-        "rely.lib"
+      "imports": [
+        "Library = require('reason-guest-login-oidc-client/library')",
+        "Rely = require('rely/lib')"
       ],
       "bin": {
         "RunTests.exe": "RunTests.re"
@@ -31,65 +31,48 @@
       ]
     },
     "routes": {
-      "require": [
-        "http"
-      ]
+      "imports": []
     },
     "library": {
-      "require": [
-        "uri",
-        "str",
-        "lwt",
-        "uuidm",
-        "reason-guest-login-oidc-client/http",
-        "reason-guest-login-oidc-client/routes",
-        "reason-guest-login-oidc-client/oidc"
-      ]
-    },
-    "http": {
-      "require": [
-        "lwt",
-        "logs",
-        "uri",
-        "str",
-        "containers",
-        "httpaf",
-        "httpaf-lwt-unix",
-        "h2",
-        "h2-lwt-unix"
+      "imports": [
+        "Lwt = require('lwt')",
+        "Uri = require('uri')",
+        "uuidm = require('yojson')",
+        "Str = require('str')",
+        "Routes = require('reason-guest-login-oidc-client/routes')",
+        "Oidc = require('reason-guest-login-oidc-client/oidc')"
       ]
     },
     "jose": {
-      "require": [
-        "containers",
-        "yojson",
-        "nocrypto",
-        "x509",
-        "base64",
-        "zarith",
-        "hex"
+      "imports": [
+        "Containers = require('containers')",
+        "Yojson = require('yojson')",
+        "Nocrypto = require('nocrypto')",
+        "X509 = require('x509')",
+        "Base64 = require('base64')",
+        "Zarith = require('zarith')",
+        "Hex = require('hex')"
       ]
     },
     "oidc": {
-      "require": [
-        "lwt",
-        "logs",
-        "uri",
-        "yojson",
-        "str",
-        "containers",
-        "reason-guest-login-oidc-client/jose"
+      "imports": [
+        "Lwt = require('lwt')",
+        "Logs = require('logs')",
+        "Uri = require('uri')",
+        "Yojson = require('yojson')",
+        "Str = require('str')",
+        "Containers = require('containers')",
+        "Jose = require('reason-guest-login-oidc-client/jose')"
       ]
     },
     "executable": {
-      "require": [
-        "lwt",
-        "logs",
-        "logs.fmt",
-        "fmt.tty",
-        "reason-guest-login-oidc-client/library",
-        "reason-guest-login-oidc-client/http",
-        "reason-guest-login-oidc-client/oidc"
+      "imports": [
+        "Logs = require('logs')",
+        "Logs_fmt = require('logs/fmt')",
+        "Fmt_tty = require('fmt/tty')",
+        "Lwt = require('lwt')",
+        "Library = require('reason-guest-login-oidc-client/library')",
+        "Oidc = require('reason-guest-login-oidc-client/oidc')"
       ],
       "bin": {
         "ReasonGuestLoginOidcClientApp.exe": "ReasonGuestLoginOidcClientApp.re"
@@ -112,19 +95,10 @@
     "@opam/cstruct-lwt": "*",
     "@opam/dune": "*",
     "@opam/fmt": "*",
-    "@opam/h2-lwt-unix": "*",
-    "@opam/h2-lwt": "*",
-    "@opam/h2": "*",
     "@opam/hex": "*",
-    "@opam/hpack": "*",
-    "@opam/httpaf-lwt-unix": "*",
-    "@opam/httpaf-lwt": "*",
-    "@opam/httpaf": "*",
     "@opam/logs": "*",
-    "@opam/lwt_ssl": "*",
     "@opam/lwt": "*",
     "@opam/nocrypto": "*",
-    "@opam/ssl": "*",
     "@opam/uri": "*",
     "@opam/uuidm": "*",
     "@opam/x509": "0.6.3",
@@ -133,51 +107,23 @@
     "@esy-ocaml/reason": "*",
     "refmterr": "*",
     "ocaml": "~4.7.0",
-    "pesy": "*",
+    "@pesy/esy-pesy": "0.1.0-alpha.3",
     "@reason-native/rely": "*",
-    "@esy-packages/esy-openssl": "*",
-    "@reason-native-web/http": "*"
+    "@reason-native-web/morph": "*",
+    "@reason-native-web/morph_server_http": "*"
   },
   "devDependencies": {
     "@opam/merlin": "*",
     "@opam/ocamlformat": "*"
   },
   "resolutions": {
+    "@pesy/esy-pesy": "esy/pesy#2416a5e9f874f334120bec46776e0eece06d7a45",
+    "@opam/opium_core": "rgrinberg/opium:opium_core.opam#287b83f85bcf6c75d503b1edab77c7ec524f9090",
     "@opam/cstruct": "3.3.0",
     "pesy": "esy/pesy#ba6359f25621280a8105d2ffc99d75d849c0d95a",
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#5dff1b4",
-    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#5dff1b4",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#5dff1b4",
     "@opam/nocrypto": "mirleft/ocaml-nocrypto:opam#ed7bb8d",
-    "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c",
-    "@opam/ssl": {
-      "source": "savonet/ocaml-ssl:ssl.opam#9dd1cbf71839195e115b8e2438554c530e0f0ed0",
-      "override": {
-        "dependencies": {
-          "@opam/conf-openssl": "*",
-          "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c"
-        },
-        "buildEnv": {
-          "CFLAGS": "-I$OPENSSL_INCLUDE_PATH",
-          "LDFLAGS": "-L$OPENSSL_LIB_PATH"
-        }
-      }
-    },
-    "@opam/conf-openssl": {
-      "source": "no-source:",
-      "override": {
-        "build": [
-          "pkg-config openssl"
-        ],
-        "dependencies": {
-          "@opam/conf-pkg-config": "1.1",
-          "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c"
-        },
-        "buildEnv": {
-          "CFLAGS": "-I$OPENSSL_INCLUDE_PATH $CFLAGS",
-          "LDFLAGS": "-L$OPENSSL_LIB_PATH $LDFLAGS"
-        }
-      }
-    }
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#76b461bed081c64908fb1fdfa076ab2c936ca622"
   }
 }
