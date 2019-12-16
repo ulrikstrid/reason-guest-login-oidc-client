@@ -8,7 +8,7 @@ let handler = (~context, request: Morph.Request.t) => {
   | (_, ["success.txt"]) =>
     Morph.Response.empty |> Morph.Response.text("success")
   | (_, ["guest", "s", sitekey]) =>
-    GuestLanding.make(~context, req_uri, sitekey)
+    CheckMacAndUrl.middleware(GuestLanding.make(~context, sitekey), request)
   | (`GET, ["auth", "cb"]) => AuthCallback.make(~context, req_uri)
   | (_, _) => Morph.Response.not_found(Morph.Response.empty)
   };

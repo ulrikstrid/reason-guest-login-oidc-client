@@ -3,93 +3,15 @@
   "version": "0.0.0",
   "description": "My Project",
   "esy": {
-    "build": "dune build -p #{self.name}",
-    "release": {
-      "releasedBinaries": [
-        "ReasonGuestLoginOidcClientApp.exe"
-      ]
-    }
-  },
-  "buildDirs": {
-    "test": {
-      "imports": [
-        "Library = require('reason-guest-login-oidc-client/library')",
-        "Rely = require('rely/lib')"
-      ],
-      "bin": {
-        "RunTests.exe": "RunTests.re"
-      },
-      "flags": [
-        ":standard",
-        "-w",
-        "-9"
-      ],
-      "rawBuildConfig": [
-        "(ocamlopt_flags -linkall -g)",
-        "(package test-reason-guest-login-oidc-client)",
-        "(modules :standard RunTests)"
-      ]
-    },
-    "routes": {
-      "imports": []
-    },
-    "library": {
-      "imports": [
-        "Lwt = require('lwt')",
-        "Uri = require('uri')",
-        "uuidm = require('yojson')",
-        "Str = require('str')",
-        "Oidc = require('reason-guest-login-oidc-client/oidc')"
-      ]
-    },
-    "jose": {
-      "imports": [
-        "Containers = require('containers')",
-        "Yojson = require('yojson')",
-        "Nocrypto = require('nocrypto')",
-        "X509 = require('x509')",
-        "Base64 = require('base64')",
-        "Zarith = require('zarith')",
-        "Hex = require('hex')"
-      ]
-    },
-    "oidc": {
-      "imports": [
-        "Lwt = require('lwt')",
-        "Logs = require('logs')",
-        "Uri = require('uri')",
-        "Yojson = require('yojson')",
-        "Str = require('str')",
-        "Containers = require('containers')",
-        "Jose = require('reason-guest-login-oidc-client/jose')"
-      ]
-    },
-    "executable": {
-      "imports": [
-        "Logs = require('logs')",
-        "Logs_fmt = require('logs/fmt')",
-        "Fmt_tty = require('fmt/tty')",
-        "Lwt = require('lwt')",
-        "Library = require('reason-guest-login-oidc-client/library')",
-        "Oidc = require('reason-guest-login-oidc-client/oidc')"
-      ],
-      "bin": {
-        "ReasonGuestLoginOidcClientApp.exe": "ReasonGuestLoginOidcClientApp.re"
-      },
-      "rawBuildConfig": [
-        "(package reason-guest-login-oidc-client)",
-        "(ocamlopt_flags -O3)"
-      ],
-      "rawBuildConfigFooter": [
-        "(env (docker (flags (:standard -ccopt -static -verbose))))"
-      ]
-    }
+    "buildDev": "refmterr dune build --root .",
+    "build": "dune build -p #{self.name}"
   },
   "scripts": {
     "test": "esy b dune runtest",
-    "format": "dune build @fmt --auto-promote --root ."
+    "fmt": "dune build @fmt --auto-promote --root ."
   },
   "dependencies": {
+    "@esy-ocaml/reason": "*",
     "@opam/base64": "*",
     "@opam/containers": "*",
     "@opam/cstruct-lwt": "*",
@@ -98,33 +20,34 @@
     "@opam/hex": "*",
     "@opam/logs": "*",
     "@opam/lwt": "*",
+    "@opam/lwt_ppx": "1.2.3",
     "@opam/nocrypto": "*",
     "@opam/uri": "*",
     "@opam/uuidm": "*",
     "@opam/x509": "0.6.3",
     "@opam/yojson": "*",
     "@opam/zarith": "*",
-    "@esy-ocaml/reason": "*",
-    "refmterr": "*",
-    "ocaml": "~4.7.0",
-    "@pesy/esy-pesy": "0.1.0-alpha.3",
-    "@reason-native/rely": "*",
     "@reason-native-web/morph": "*",
     "@reason-native-web/morph_client": "*",
-    "@reason-native-web/morph_server_http": "*"
+    "@reason-native-web/morph_server_http": "*",
+    "@reason-native/rely": "*",
+    "ocaml": "~4.8.0"
   },
   "devDependencies": {
     "@opam/merlin": "*",
-    "@opam/ocamlformat": "*"
+    "@opam/ocamlformat": "*",
+    "refmterr": "*"
   },
   "resolutions": {
-    "@pesy/esy-pesy": "esy/pesy#2416a5e9f874f334120bec46776e0eece06d7a45",
-    "@opam/opium_core": "rgrinberg/opium:opium_core.opam#287b83f85bcf6c75d503b1edab77c7ec524f9090",
+    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f",
     "@opam/cstruct": "3.3.0",
-    "pesy": "esy/pesy#ba6359f25621280a8105d2ffc99d75d849c0d95a",
     "@opam/nocrypto": "mirleft/ocaml-nocrypto:opam#ed7bb8d",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
-    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#76b461bed081c64908fb1fdfa076ab2c936ca622",
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#76b461bed081c64908fb1fdfa076ab2c936ca622"
+    "@reason-native-web/morph": "reason-native-web/morph:morph.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_client": "reason-native-web/morph:morph_client.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_server": "reason-native-web/morph:morph_server.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_server_http": "reason-native-web/morph:morph_server_http.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad"
   }
 }

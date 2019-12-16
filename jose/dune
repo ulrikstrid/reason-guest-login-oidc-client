@@ -1,2 +1,4 @@
-(library (name Jose) (public_name reason-guest-login-oidc-client.jose)
-    (libraries containers yojson nocrypto x509 base64 zarith hex)) 
+(library
+ (name Jose)
+ (public_name reason-guest-login-oidc-client.jose)
+ (libraries containers yojson nocrypto x509 base64 zarith hex))

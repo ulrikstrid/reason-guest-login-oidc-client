@@ -20,7 +20,7 @@ Morph_client.handle(discovery_request)
     let body =
       switch (response.body) {
       | `String(body) => body
-      | `Stream(_) => ""
+      | _ => ""
       };
 
     let discovery = Oidc.Discover.from_string(body);
@@ -28,4 +28,5 @@ Morph_client.handle(discovery_request)
 
     Morph.start(~servers=[http_server], Router.handler(~context));
   }
-);
+)
+|> Lwt_main.run;

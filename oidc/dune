@@ -1,3 +1,5 @@
-(library (name Oidc) (public_name reason-guest-login-oidc-client.oidc)
-    (libraries lwt logs uri yojson str containers
-        reason-guest-login-oidc-client.jose)) 
+(library
+ (name Oidc)
+ (public_name reason-guest-login-oidc-client.oidc)
+ (libraries lwt logs uri yojson str containers
+   reason-guest-login-oidc-client.jose))

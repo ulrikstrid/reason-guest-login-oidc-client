@@ -1,7 +1,12 @@
-(executable (name ReasonGuestLoginOidcClientApp)
-    (public_name ReasonGuestLoginOidcClientApp.exe)
-    (libraries lwt logs logs.fmt fmt.tty
-        reason-guest-login-oidc-client.library
-        reason-guest-login-oidc-client.oidc
-        morph morph_server_http)
-    (package reason-guest-login-oidc-client) (ocamlopt_flags -O3)) (env (docker (flags (:standard -ccopt -static -verbose)))) 
+(executable
+ (name ReasonGuestLoginOidcClientApp)
+ (public_name ReasonGuestLoginOidcClientApp.exe)
+ (libraries lwt logs logs.fmt fmt.tty reason-guest-login-oidc-client.library
+   reason-guest-login-oidc-client.oidc morph morph_server_http)
+ (package reason-guest-login-oidc-client)
+ (ocamlopt_flags -O3))
+
+(env
+ (docker
+  (flags
+   (:standard -ccopt -static -verbose))))
