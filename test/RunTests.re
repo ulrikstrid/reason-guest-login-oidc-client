@@ -1,1 +1,1 @@
-TestReasonGuestLoginOidcClient.TestFramework.cli();
+TestFramework.cli();

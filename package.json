@@ -3,181 +3,51 @@
   "version": "0.0.0",
   "description": "My Project",
   "esy": {
-    "build": "dune build -p #{self.name}",
-    "release": {
-      "releasedBinaries": [
-        "ReasonGuestLoginOidcClientApp.exe"
-      ]
-    }
-  },
-  "buildDirs": {
-    "test": {
-      "require": [
-        "reason-guest-login-oidc-client/library",
-        "rely.lib"
-      ],
-      "bin": {
-        "RunTests.exe": "RunTests.re"
-      },
-      "flags": [
-        ":standard",
-        "-w",
-        "-9"
-      ],
-      "rawBuildConfig": [
-        "(ocamlopt_flags -linkall -g)",
-        "(package test-reason-guest-login-oidc-client)",
-        "(modules :standard RunTests)"
-      ]
-    },
-    "routes": {
-      "require": [
-        "http"
-      ]
-    },
-    "library": {
-      "require": [
-        "uri",
-        "str",
-        "lwt",
-        "uuidm",
-        "reason-guest-login-oidc-client/http",
-        "reason-guest-login-oidc-client/routes",
-        "reason-guest-login-oidc-client/oidc"
-      ]
-    },
-    "http": {
-      "require": [
-        "lwt",
-        "logs",
-        "uri",
-        "str",
-        "containers",
-        "httpaf",
-        "httpaf-lwt-unix",
-        "h2",
-        "h2-lwt-unix"
-      ]
-    },
-    "jose": {
-      "require": [
-        "containers",
-        "yojson",
-        "nocrypto",
-        "x509",
-        "base64",
-        "zarith",
-        "hex"
-      ]
-    },
-    "oidc": {
-      "require": [
-        "lwt",
-        "logs",
-        "uri",
-        "yojson",
-        "str",
-        "containers",
-        "reason-guest-login-oidc-client/jose"
-      ]
-    },
-    "executable": {
-      "require": [
-        "lwt",
-        "logs",
-        "logs.fmt",
-        "fmt.tty",
-        "reason-guest-login-oidc-client/library",
-        "reason-guest-login-oidc-client/http",
-        "reason-guest-login-oidc-client/oidc"
-      ],
-      "bin": {
-        "ReasonGuestLoginOidcClientApp.exe": "ReasonGuestLoginOidcClientApp.re"
-      },
-      "rawBuildConfig": [
-        "(package reason-guest-login-oidc-client)",
-        "(ocamlopt_flags -O3)"
-      ],
-      "rawBuildConfigFooter": [
-        "(env (docker (flags (:standard -ccopt -static -verbose))))"
-      ]
-    }
+    "buildDev": "refmterr dune build --root .",
+    "build": "dune build -p #{self.name}"
   },
   "scripts": {
-    "test": "esy b dune runtest"
+    "test": "esy b dune runtest",
+    "fmt": "dune build @fmt --auto-promote --root ."
   },
   "dependencies": {
+    "@esy-ocaml/reason": "*",
     "@opam/base64": "*",
     "@opam/containers": "*",
     "@opam/cstruct-lwt": "*",
     "@opam/dune": "*",
     "@opam/fmt": "*",
-    "@opam/h2-lwt-unix": "*",
-    "@opam/h2-lwt": "*",
-    "@opam/h2": "*",
     "@opam/hex": "*",
-    "@opam/hpack": "*",
-    "@opam/httpaf-lwt-unix": "*",
-    "@opam/httpaf-lwt": "*",
-    "@opam/httpaf": "*",
     "@opam/logs": "*",
-    "@opam/lwt_ssl": "*",
     "@opam/lwt": "*",
+    "@opam/lwt_ppx": "1.2.3",
     "@opam/nocrypto": "*",
-    "@opam/ssl": "*",
     "@opam/uri": "*",
     "@opam/uuidm": "*",
     "@opam/x509": "0.6.3",
     "@opam/yojson": "*",
     "@opam/zarith": "*",
-    "@esy-ocaml/reason": "*",
-    "refmterr": "*",
-    "ocaml": "~4.7.0",
-    "pesy": "*",
+    "@reason-native-web/morph": "*",
+    "@reason-native-web/morph_client": "*",
+    "@reason-native-web/morph_server_http": "*",
     "@reason-native/rely": "*",
-    "@esy-packages/esy-openssl": "*",
-    "@reason-native-web/http": "*"
+    "ocaml": "~4.8.0"
   },
   "devDependencies": {
     "@opam/merlin": "*",
-    "@opam/ocamlformat": "*"
+    "@opam/ocamlformat": "*",
+    "refmterr": "*"
   },
   "resolutions": {
+    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f",
     "@opam/cstruct": "3.3.0",
-    "pesy": "esy/pesy#ba6359f25621280a8105d2ffc99d75d849c0d95a",
-    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#5dff1b4",
-    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#5dff1b4",
-    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#5dff1b4",
     "@opam/nocrypto": "mirleft/ocaml-nocrypto:opam#ed7bb8d",
-    "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c",
-    "@opam/ssl": {
-      "source": "savonet/ocaml-ssl:ssl.opam#9dd1cbf71839195e115b8e2438554c530e0f0ed0",
-      "override": {
-        "dependencies": {
-          "@opam/conf-openssl": "*",
-          "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c"
-        },
-        "buildEnv": {
-          "CFLAGS": "-I$OPENSSL_INCLUDE_PATH",
-          "LDFLAGS": "-L$OPENSSL_LIB_PATH"
-        }
-      }
-    },
-    "@opam/conf-openssl": {
-      "source": "no-source:",
-      "override": {
-        "build": [
-          "pkg-config openssl"
-        ],
-        "dependencies": {
-          "@opam/conf-pkg-config": "1.1",
-          "@esy-packages/esy-openssl": "esy-packages/esy-openssl#f731e9c"
-        },
-        "buildEnv": {
-          "CFLAGS": "-I$OPENSSL_INCLUDE_PATH $CFLAGS",
-          "LDFLAGS": "-L$OPENSSL_LIB_PATH $LDFLAGS"
-        }
-      }
-    }
+    "@reason-native-web/morph": "reason-native-web/morph:morph.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_client": "reason-native-web/morph:morph_client.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_server": "reason-native-web/morph:morph_server.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@reason-native-web/morph_server_http": "reason-native-web/morph:morph_server_http.json#872a98b23a9039edc2471a98c4d9c4757417a829",
+    "@opam/httpaf-lwt-unix": "anmonteiro/httpaf:httpaf-lwt-unix.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad",
+    "@opam/httpaf-lwt": "anmonteiro/httpaf:httpaf-lwt.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad",
+    "@opam/httpaf": "anmonteiro/httpaf:httpaf.opam#90e7c8783a99bdb9f098b017a2ca34516de0abad"
   }
 }

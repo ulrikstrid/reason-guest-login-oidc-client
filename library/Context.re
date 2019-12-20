@@ -23,7 +23,7 @@ type t = {
   delete_session: string => unit,
 };
 
-let make_context = (~discovery, ()) => {
+let make = (~discovery, ()) => {
   client: {
     id: Sys.getenv("OIDC_CLIENT_ID"),
     redirect_uri: Sys.getenv("OIDC_REDIRECT_URI"),
@@ -33,3 +33,19 @@ let make_context = (~discovery, ()) => {
   get_session,
   delete_session,
 };
+
+module Env = {
+  let key = Hmap.Key.create();
+};
+
+let get_context = (request: Morph.Request.t) =>
+  Hmap.get(Env.key, request.context);
+
+let middleware: (~context: t) => Morph.Server.middleware =
+  (~context: t, handler, request) => {
+    let next_request = {
+      ...request,
+      context: Hmap.add(Env.key, context, request.context),
+    };
+    handler(next_request);
+  };

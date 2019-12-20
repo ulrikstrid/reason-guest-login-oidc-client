@@ -1,4 +1,7 @@
-(library (name Library) (public_name reason-guest-login-oidc-client.library)
-    (libraries uri str lwt uuidm reason-guest-login-oidc-client.http
-        reason-guest-login-oidc-client.routes
-        reason-guest-login-oidc-client.oidc)) 
+(library
+ (name Library)
+ (public_name reason-guest-login-oidc-client.library)
+ (libraries uri str lwt uuidm morph morph_client
+   reason-guest-login-oidc-client.oidc)
+ (preprocess
+  (pps lwt_ppx)))
