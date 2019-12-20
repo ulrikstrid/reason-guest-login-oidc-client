@@ -1,5 +1,7 @@
-let make = (~context, sitekey, request: Morph.Request.t) => {
+let make = (sitekey, request: Morph.Request.t) => {
   open Context;
+
+  let context = Context.get_context(request);
 
   let req_uri = Uri.of_string(request.target);
   let (device_mac, target_url) =

@@ -26,7 +26,11 @@ Morph_client.handle(discovery_request)
     let discovery = Oidc.Discover.from_string(body);
     let context = Context.make(~discovery, ());
 
-    Morph.start(~servers=[http_server], Router.handler(~context));
+    Morph.start(
+      ~servers=[http_server],
+      ~middlewares=[Context.middleware(~context)],
+      Router.handler,
+    );
   }
 )
 |> Lwt_main.run;

@@ -33,3 +33,19 @@ let make = (~discovery, ()) => {
   get_session,
   delete_session,
 };
+
+module Env = {
+  let key = Hmap.Key.create();
+};
+
+let get_context = (request: Morph.Request.t) =>
+  Hmap.get(Env.key, request.context);
+
+let middleware: (~context: t) => Morph.Server.middleware =
+  (~context: t, handler, request) => {
+    let next_request = {
+      ...request,
+      context: Hmap.add(Env.key, context, request.context),
+    };
+    handler(next_request);
+  };
