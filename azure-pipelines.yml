@@ -37,7 +37,7 @@ stages:
           
           # Build the builder stage:
           - script: |
-              docker build --target builder \
+              docker build --target esy \
                     --cache-from=$(dockerId)/$(imageName)-builder:latest \
                     --tag $(dockerId)/$(imageName)-builder:latest .
             displayName: "Build builder stage"
