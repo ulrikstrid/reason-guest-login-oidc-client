@@ -19,7 +19,7 @@
     "@opam/fmt": "*",
     "@opam/hex": "*",
     "@opam/logs": "*",
-    "@opam/lwt": "*",
+    "@opam/lwt": "^4.0.0",
     "@opam/lwt_ppx": "1.2.3",
     "@opam/nocrypto": "*",
     "@opam/uri": "*",

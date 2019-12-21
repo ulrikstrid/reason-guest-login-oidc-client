@@ -1,33 +1,44 @@
-FROM node:lts-alpine as builder
+FROM node:12-alpine as build
 
-ENV TERM=dumb \
-    LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
+ENV TERM=dumb LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
 
-WORKDIR /guest-portal
+RUN mkdir /esy
+WORKDIR /esy
 
-RUN apk add --no-cache \
-    libev libev-dev jq \
-    ca-certificates wget \
-    bash curl perl-utils \
-    git patch gcc g++ \
-    make m4 util-linux zlib-dev \
-    linux-headers musl-dev
+ENV NPM_CONFIG_PREFIX=/esy
+RUN npm install -g --unsafe-perm esy@latest
+
+# now that we have esy installed we need a proper runtime
+
+FROM alpine:3.8 as esy
+
+ENV TERM=dumb LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
+
+WORKDIR /
+
+COPY --from=build /esy /esy
+
+RUN apk add --no-cache ca-certificates wget bash curl perl-utils git patch \
+    gcc g++ musl-dev make m4 linux-headers coreutils
 
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
 RUN wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk
 RUN apk add --no-cache glibc-2.28-r0.apk
 
-RUN npm install -g esy@0.5.8 --unsafe-perm
+ENV PATH=/esy/bin:$PATH
 
+RUN mkdir /app
+WORKDIR /app
 
-COPY docker-cache.json /guest-portal/package.json
-COPY esy.lock /guest-portal/esy.lock
+COPY docker-cache.json /app/package.json
+COPY esy.lock /app/esy.lock
 
 RUN esy
 
-COPY . /guest-portal
+COPY . ./
 
 RUN esy install
+
 RUN esy build
 
 RUN esy dune build --profile=docker
@@ -40,8 +51,8 @@ FROM scratch
 
 WORKDIR /guest-portal
 
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /guest-portal/main.exe main.exe
+COPY --from=esy /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=esy /app/main.exe main.exe
 
 EXPOSE 8080 9443
 
