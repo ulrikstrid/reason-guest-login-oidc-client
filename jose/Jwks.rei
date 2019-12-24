@@ -1,4 +1,4 @@
-type t = {keys: list(Jwk.t)};
+type t = {keys: list(Jwk.Pub.t)};
 
 let to_json: t => Yojson.Basic.t;
 

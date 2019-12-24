@@ -1,19 +1,43 @@
-type t = {
-  alg : string option;
-  kty : string;
-  use : string option;
-  n : string;
-  e : string;
-  kid : string;
-  x5t : string option;
-}
+module Pub : sig
+  type t = {
+    alg : string option;
+    kty : string;
+    use : string option;
+    n : string;
+    e : string;
+    kid : string;
+    x5t : string option;
+  }
 
-val empty : t
+  val empty : t
 
-val make : Nocrypto.Rsa.pub -> (t, [ `Msg of string ]) result
+  val to_pub : t -> Nocrypto.Rsa.pub
 
-val to_json : t -> Yojson.Basic.t
+  val of_pub : Nocrypto.Rsa.pub -> (t, [ `Msg of string ]) result
 
-val from_json : Yojson.Basic.t -> t
+  val of_pub_pem : string -> (t, [ `Msg of string ]) result
 
-val from_string : string -> t
+  val to_pub_pem : t -> string
+
+  val to_json : t -> Yojson.Basic.t
+
+  val from_json : Yojson.Basic.t -> t
+
+  val from_string : string -> t
+end
+
+module Priv : sig
+  type public_key = {
+    kty : string;
+    n : string;
+    e : string;
+    d : string;
+    p : string;
+    q : string;
+    dp : string;
+    dq : string;
+    qi : string;
+    alg : string option;
+    kid : string;
+  }
+end

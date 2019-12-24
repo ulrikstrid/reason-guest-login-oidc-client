@@ -1,0 +1,5 @@
+(executable
+ (name RunTests)
+ (package guest_login)
+ (public_name RunTests.exe)
+ (libraries guest_login.framework guest_login.jwk))

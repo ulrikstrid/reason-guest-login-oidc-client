@@ -11,3 +11,4 @@ reason-guest-login-oidc-client.install
 _esy
 
 deploy.sh
+junit.xml

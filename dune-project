@@ -1,4 +1,4 @@
 (lang dune 1.2)
-(name reason-guest-login-oidc-client)
+(name guest_login)
 
 (using fmt 1.2)

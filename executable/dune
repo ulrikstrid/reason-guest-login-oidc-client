@@ -1,9 +1,9 @@
 (executable
  (name ReasonGuestLoginOidcClientApp)
  (public_name ReasonGuestLoginOidcClientApp.exe)
- (libraries lwt logs logs.fmt fmt.tty reason-guest-login-oidc-client.library
-   reason-guest-login-oidc-client.oidc morph morph_server_http)
- (package reason-guest-login-oidc-client)
+ (libraries lwt logs logs.fmt fmt.tty guest_login.library guest_login.oidc
+   morph morph_server_http)
+ (package guest_login)
  (ocamlopt_flags -O3))
 
 (env

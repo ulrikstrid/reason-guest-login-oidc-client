@@ -1,5 +1,5 @@
 let make = (state, request) => {
-    let context = Context.get_context(request);
+  let context = Context.get_context(request);
 
   let Context.{auth_json, sitekey, target_url, _} =
     CCOpt.get_exn(context.get_session(state));

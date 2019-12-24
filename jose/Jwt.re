@@ -7,7 +7,7 @@ type header = {
   kid: string,
 };
 
-let make_header = (jwk: Jwk.t) => {alg: `RSA, typ: `JWT, kid: jwk.kid};
+let make_header = (jwk: Jwk.Pub.t) => {alg: `RSA, typ: `JWT, kid: jwk.kid};
 
 let base64_url_encode =
   Base64.encode(~pad=false, ~alphabet=Base64.uri_safe_alphabet);
@@ -178,7 +178,7 @@ let verify_internal = (~n, ~e, t) => {
   };
 };
 
-let verify = (~jwks: list(Jwk.t), t) => {
+let verify = (~jwks: list(Jwk.Pub.t), t) => {
   let header = t.header;
   let payload = t.payload;
 
@@ -195,14 +195,14 @@ let verify = (~jwks: list(Jwk.t), t) => {
        }
      )
   |> CCResult.flat_map(_ =>
-       CCList.find_opt((jwk: Jwk.t) => jwk.kid == header.kid, jwks)
+       CCList.find_opt((jwk: Jwk.Pub.t) => jwk.kid == header.kid, jwks)
        |> (
          fun
          | Some(jwk) => Ok(jwk)
          | None => Error(`Msg("Did not find key with correct kid"))
        )
      )
-  |> CCResult.flat_map((jwk: Jwk.t) =>
+  |> CCResult.flat_map((jwk: Jwk.Pub.t) =>
        CCResult.both(base64_url_decode(jwk.n), base64_url_decode(jwk.e))
      )
   |> CCResult.flat_map(((n, e)) => verify_internal(~n, ~e, t))

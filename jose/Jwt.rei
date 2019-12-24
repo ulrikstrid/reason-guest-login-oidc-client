@@ -1,6 +1,6 @@
 type header;
 
-let make_header: Jwk.t => header;
+let make_header: Jwk.Pub.t => header;
 
 type payload = Yojson.Basic.t;
 type claim = (string, Yojson.Basic.t);
@@ -19,4 +19,4 @@ let sign:
 let to_string: t => string;
 let from_string: string => result(t, [ | `Msg(string)]);
 
-let verify: (~jwks: list(Jwk.t), t) => result(t, [ | `Msg(string)]);
+let verify: (~jwks: list(Jwk.Pub.t), t) => result(t, [ | `Msg(string)]);

@@ -1,7 +1,0 @@
-(test
- (name RunTests)
- (libraries reason-guest-login-oidc-client.library rely.lib)
- (flags :standard -w -9)
- (ocamlopt_flags -linkall -g)
- (package test-reason-guest-login-oidc-client)
- (modules :standard RunTests))
