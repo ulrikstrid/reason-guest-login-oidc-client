@@ -1,52 +1,81 @@
 open TestFramework;
 
 let rsa_test_priv = {|-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCrYL5Zq4rvXwEn
-acjPDXjrl0UnAKfAchtNQIyEdf/a41tFgZkw1DXS2s+9eWNBarWYEwGhFoiOeeop
-ShU7qa5IKL7pwLaO8vPbTPNWZZ9sy3Vx18lB54IyRPBX5lrLU+n0XuYyFcZa1+Gd
-Dtgu+AQQqjDGGuSJecuABWH+rzzfumMi9K4gP9S0J8vq60mRna6R47Ati7t/jBJm
-b2vSoSaWjtKf0LJoRPnbc7SgYF8D4JWJ3xQnsa8LrrBudV5j+N3uRDMimUeHL6iW
-1KoAb8g1Iql/b3/2C0Z0M/O/13sECytFxDBVP9W+lvHwNF7pZR+C/BvhFH6FnrFI
-fRismw8BAgMBAAECggEBAIsHKqS4Azf5TIhayusdtND6oMDpSS1X5EohaV00FOHP
-u4WBg3MXVKq/k/PT++9fz/2UvaefDhz3Tj08ukjyeE5Vr7sV+YOyGJ35qRaXzmOG
-ErrOIZjzZK2/O3MzjsiQRKVYL0rGW2nq5D5zgnFoBnQ2fObZfjkAs1QiCcOBCdM8
-nttTO31JCwyBuTKGK3KaJdoba6dVze5Xhm1b/haCmq2EJOML5G73jK7m8aYkVDFb
-FJOShYATyz5Xju33QEPz+HWcMrk/TKZFRQYSjWFAzy0/ENrMptIVff3UN0KL0YSl
-0hNHlJwHStDEZAiMw4A20ojtKqfUkyR1kPzxpWdi/BkCgYEA4VVFhv5RNSJUGm1I
-zhJT54UlfIW57c/NWx/Tqbhe0QYg//sM4c/s8lw45lvmRc7vKs6C/ZGo18p+XNT+
-BaZdNFlxbtKJisM61Cegc8pIwzv4mbTyo9SjoWswxt20zVp8sIGeF4w7X94gPVZ0
-f8D3OELujXqk2i34blLDbTGF3TsCgYEAwrOkxvZ1cdj4ouFqmTFuCvEKVGxsSQeT
-Pc4/e/GsjzXGnIkLnsYbUnTXKzt7gLuu0I8B3gF0DqqPCJoGHQv6RIYdY8g6KLF+
-4eGfYSJj6zjKOx4yKP7NT3vQLZehhIKbA723rWQVZ9N3e05P65OBkIp8f5MOfNgJ
-O+OKVe49MPMCgYBA6S6JL7O3CbeOkVK6wj7XX9ynnWItJoJysJ1ps8nkjs5szyYr
-2pjYTEa73VddXro465qCbzZjS1rRZS3z9LO+w9FQamfiyFCnEu8+y9PgIeOAa8bF
-+RhWBKndb7qIuXtX4U7oW6Yy/Kru4HvY3X6Z/3X23ZClpT5+kWrohq6YRwKBgE/Q
-uPHfQtIC8hpDciGOw9+0ZFmrgNCHTHL/w8KZlfW3Q84T2DGkYLryrupIHh7t0YIp
-vcg2rE7+2FfcXDk4GcZRfGbVRBI+gRc0GNQG9xMMWsrVXBa2LZAx32txR4M8zzM/
-aLap2qSPaeGgft7Bv1FzlAnwTPYc0dw9MQ589ZTFAoGBAJrB3sNh1ysIUdA3X1Jf
-vUZfBCofmP+7Cqzln8gdeYA9iXUOoE4VTPw0jK71ZzsmlUejBz9S2ZUfs9q1Srge
-yFo8Glr/8AXXUAt7iSJS4j7sz07EZbj14LfoooSem+w/ZONy8Sdtm/WMox/iBg7S
-s+Ix44bf/PXcAri2w7OQp/G6
------END PRIVATE KEY-----|};
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDo+jbfEmKkTIF9
+XCsGrrysgPw0hKC/dGQtG3DPpiZ10i/O3gpHuRBtF6RO+BntgOcIMq2v6XBuK9fr
++1H/2SWnwEoK2Tuta6i42Fo4Dma1/CnzTO192qobLbnQoyrI7V8PuYox9B9HtYx7
+5bXKA04bZiVLOEY4MakTYVLPp1weU5NrkAkcS+ivXvbcSS8PwWOqiUlM62W9tSD0
+P0dZgdO0w62KIpJP2tEVpwHsD6mnPOfyF6IH+pzlRDiBvDWLumpwrPCrNoRofAGu
+/cINnbzDBk3HK2v3u7eEZpEfY1LAHo6F/uaiPT59DS5j1RlxoUqve8aoUf82ijmR
+WbnMW10lAgMBAAECggEAELnN8KvgOw1nCnnweNVYpEXKVXbkF3qiqn5a1f2Gq1TA
+q+hS8p09qadV23mCWwOzEmqY/5URxkcNhFqRo32Sb32lkyvPVf7xqPuXVojqJMyK
+snXmYu+s4LCis3DTZINuHLHkUvvEtyA4iriOGYetNthZexH6MJSYH9UP3eqU+XRB
+f3lw3oU+ZWJcnJiEvJa2H4haf70C0mFdTyKQQkops4QkgBEVIVtaVHXPgFnH1eh9
+uUSWlTiWqauWqe1h5jaEZbFAWPyanYAizLbGeQyOYf1N+0E4OsoRIiTQp1rRGfxU
+YO2mQelv2j15IXyQ8fZOCjvGEwiTQ6qn8g+UN4aFzQKBgQD7aodkMYS8p+a5N52d
+VhC03tZMcRqYKEutsTwDG5FdjoXou/DMJHfR7owb71gBpSZtfmA15BuFgHEvXc+O
+8ska2KDcBUIfOO3PvsD3ap41zwCMZ2DMyngSlycgknHdzsR4CiB7/D/zmkLBWYNO
+vZVRKxBYgEHcfxkiWVrPKj0QGwKBgQDtOZ+rEUtWwu0PSb5giF7Bt5iK6y+cDI9k
+G8o5JncugjP5WrRLH8VjKzuL7fT3aNnUu02oOCg5mpFmGWu1QXuWpGrcbfgd5xg3
+qN/ZSFljqmwoLdT83uW8h4Dn+MI0NJRXYZZQHr4GujzGp/Zb8yYlV7RgrFpxmSO9
+kO2LaOSbvwKBgQCDaSARZ6yYqy32m7I/fa/Hyj26wNeEtnMv+1aBzVQC0a7+gdWP
+7nPOf+At7cFTQs4+JvME2BDmi8cdWexWLGKfLKGPvxPbm/b5Qhw8djbxqxv/Rz2a
+bS2rkeP6q3Dm3d9lWu21wJhwrK29wBrY+lDklxy5FXjXVnt9r7S+WbaHBwKBgBCV
+5MnrDZ9lRXm6KCtLnYRht7KOuudoIWZYYw0X2WFRDR0z8EMIV56VWTZxTp01oXU0
+GzvVoUpVujCvOk6T43YmzKnYrm44yAKsNepVGprTQXiVq7x6QQmrV6HgTIOl4XEy
+i3XSkGqb/r/M4naPS2108lGH+1LR6CPKzDDhBoq1AoGBAIXvuhHZuTpW+S7XosUo
+3OLEi3Xo3ZS4NHViKhFMQTQgKtoO3K4yWgBTh3qu2p8EhavZpZQWDu2LGISjPpW1
+vKYFpE2KyahSJmfZ21UzsrwoaMuuy31kggReTt1yEJm/CnTDGihgCLqKAi389GG6
+EQBaMSFXOODiel+5MdQcj41b
+-----END PRIVATE KEY-----
+|};
+
+/*
+ PRIVATE JWK
+ {
+   e: "AQAB",
+   n:
+     "6Po23xJipEyBfVwrBq68rID8NISgv3RkLRtwz6YmddIvzt4KR7kQbRekTvgZ7YDnCDKtr-lwbivX6_tR_9klp8BKCtk7rWuouNhaOA5mtfwp80ztfdqqGy250KMqyO1fD7mKMfQfR7WMe-W1ygNOG2YlSzhGODGpE2FSz6dcHlOTa5AJHEvor1723EkvD8FjqolJTOtlvbUg9D9HWYHTtMOtiiKST9rRFacB7A-ppzzn8heiB_qc5UQ4gbw1i7pqcKzwqzaEaHwBrv3CDZ28wwZNxytr97u3hGaRH2NSwB6Ohf7moj0-fQ0uY9UZcaFKr3vGqFH_Noo5kVm5zFtdJQ",
+   d:
+     "ELnN8KvgOw1nCnnweNVYpEXKVXbkF3qiqn5a1f2Gq1TAq-hS8p09qadV23mCWwOzEmqY_5URxkcNhFqRo32Sb32lkyvPVf7xqPuXVojqJMyKsnXmYu-s4LCis3DTZINuHLHkUvvEtyA4iriOGYetNthZexH6MJSYH9UP3eqU-XRBf3lw3oU-ZWJcnJiEvJa2H4haf70C0mFdTyKQQkops4QkgBEVIVtaVHXPgFnH1eh9uUSWlTiWqauWqe1h5jaEZbFAWPyanYAizLbGeQyOYf1N-0E4OsoRIiTQp1rRGfxUYO2mQelv2j15IXyQ8fZOCjvGEwiTQ6qn8g-UN4aFzQ",
+   p:
+     "-2qHZDGEvKfmuTednVYQtN7WTHEamChLrbE8AxuRXY6F6LvwzCR30e6MG-9YAaUmbX5gNeQbhYBxL13PjvLJGtig3AVCHzjtz77A92qeNc8AjGdgzMp4EpcnIJJx3c7EeAoge_w_85pCwVmDTr2VUSsQWIBB3H8ZIllazyo9EBs",
+   q:
+     "7TmfqxFLVsLtD0m-YIhewbeYiusvnAyPZBvKOSZ3LoIz-Vq0Sx_FYys7i-3092jZ1LtNqDgoOZqRZhlrtUF7lqRq3G34HecYN6jf2UhZY6psKC3U_N7lvIeA5_jCNDSUV2GWUB6-Bro8xqf2W_MmJVe0YKxacZkjvZDti2jkm78",
+   dp:
+     "g2kgEWesmKst9puyP32vx8o9usDXhLZzL_tWgc1UAtGu_oHVj-5zzn_gLe3BU0LOPibzBNgQ5ovHHVnsVixinyyhj78T25v2-UIcPHY28asb_0c9mm0tq5Hj-qtw5t3fZVrttcCYcKytvcAa2PpQ5JccuRV411Z7fa-0vlm2hwc",
+   dq:
+     "EJXkyesNn2VFebooK0udhGG3so6652ghZlhjDRfZYVENHTPwQwhXnpVZNnFOnTWhdTQbO9WhSlW6MK86TpPjdibMqdiubjjIAqw16lUamtNBeJWrvHpBCatXoeBMg6XhcTKLddKQapv-v8zido9LbXTyUYf7UtHoI8rMMOEGirU",
+   qi:
+     "he-6Edm5Olb5LteixSjc4sSLdejdlLg0dWIqEUxBNCAq2g7crjJaAFOHeq7anwSFq9mllBYO7YsYhKM-lbW8pgWkTYrJqFImZ9nbVTOyvChoy67LfWSCBF5O3XIQmb8KdMMaKGAIuooCLfz0YboRAFoxIVc44OJ6X7kx1ByPjVs",
+   kty: "RSA",
+   kid: "0IRFN_RUHUQcXcdp_7PLBxoG_9b6bHrvGH0p8qRotik"
+ }
+ */
 
 let rsa_test_pub = {|-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq2C+WauK718BJ2nIzw14
-65dFJwCnwHIbTUCMhHX/2uNbRYGZMNQ10trPvXljQWq1mBMBoRaIjnnqKUoVO6mu
-SCi+6cC2jvLz20zzVmWfbMt1cdfJQeeCMkTwV+Zay1Pp9F7mMhXGWtfhnQ7YLvgE
-EKowxhrkiXnLgAVh/q8837pjIvSuID/UtCfL6utJkZ2ukeOwLYu7f4wSZm9r0qEm
-lo7Sn9CyaET523O0oGBfA+CVid8UJ7GvC66wbnVeY/jd7kQzIplHhy+oltSqAG/I
-NSKpf29/9gtGdDPzv9d7BAsrRcQwVT/Vvpbx8DRe6WUfgvwb4RR+hZ6xSH0YrJsP
-AQIDAQAB
------END PUBLIC KEY-----|};
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6Po23xJipEyBfVwrBq68
+rID8NISgv3RkLRtwz6YmddIvzt4KR7kQbRekTvgZ7YDnCDKtr+lwbivX6/tR/9kl
+p8BKCtk7rWuouNhaOA5mtfwp80ztfdqqGy250KMqyO1fD7mKMfQfR7WMe+W1ygNO
+G2YlSzhGODGpE2FSz6dcHlOTa5AJHEvor1723EkvD8FjqolJTOtlvbUg9D9HWYHT
+tMOtiiKST9rRFacB7A+ppzzn8heiB/qc5UQ4gbw1i7pqcKzwqzaEaHwBrv3CDZ28
+wwZNxytr97u3hGaRH2NSwB6Ohf7moj0+fQ0uY9UZcaFKr3vGqFH/Noo5kVm5zFtd
+JQIDAQAB
+-----END PUBLIC KEY-----
+|};
 
-let rsa_test_pub_2 = {|-----BEGIN PUBLIC KEY-----
-MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgHvcKHCv551lUYeZsJk9aDRv1fGl
-P5lfTBXEKL1fwP1lnBLT/omQ9jx/bqoTYQKMqfSeOwWry7f324prXo2FG9C/VRpJ
-cEX/JMQuVgf4OoOjIueHZFnzEymEzMU2JlVVSl0ioTxwvhVmElzbpYh27ABJK/PN
-Su2L9lVb8BvQngCPAgMBAAE=
------END PUBLIC KEY-----|};
+/*
+ PUB JWK
+ {
+   e: "AQAB",
+   n:
+     "6Po23xJipEyBfVwrBq68rID8NISgv3RkLRtwz6YmddIvzt4KR7kQbRekTvgZ7YDnCDKtr-lwbivX6_tR_9klp8BKCtk7rWuouNhaOA5mtfwp80ztfdqqGy250KMqyO1fD7mKMfQfR7WMe-W1ygNOG2YlSzhGODGpE2FSz6dcHlOTa5AJHEvor1723EkvD8FjqolJTOtlvbUg9D9HWYHTtMOtiiKST9rRFacB7A-ppzzn8heiB_qc5UQ4gbw1i7pqcKzwqzaEaHwBrv3CDZ28wwZNxytr97u3hGaRH2NSwB6Ohf7moj0-fQ0uY9UZcaFKr3vGqFH_Noo5kVm5zFtdJQ",
+   kty: "RSA",
+   kid: "0IRFN_RUHUQcXcdp_7PLBxoG_9b6bHrvGH0p8qRotik"
+ }
+ */
 
-describe("JWK", ({test}) => {
+describe("JWK.Pub", ({test}) => {
   test("Creates a correct jwt from pem", ({expect}) => {
     Jose.Jwk.Pub.of_pub_pem(rsa_test_pub)
     |> (
@@ -57,10 +86,69 @@ describe("JWK", ({test}) => {
         CCResult.get_exn(r)
         |> (
           jwk => {
-            expect.string(jwk.kty).toMatch("RSA");
-            expect.string(jwk.e).toMatch("AQAB");
-            expect.string(jwk.n).toMatch(
-              "q2C-WauK718BJ2nIzw1465dFJwCnwHIbTUCMhHX_2uNbRYGZMNQ10trPvXljQWq1mBMBoRaIjnnqKUoVO6muSCi-6cC2jvLz20zzVmWfbMt1cdfJQeeCMkTwV-Zay1Pp9F7mMhXGWtfhnQ7YLvgEEKowxhrkiXnLgAVh_q8837pjIvSuID_UtCfL6utJkZ2ukeOwLYu7f4wSZm9r0qEmlo7Sn9CyaET523O0oGBfA-CVid8UJ7GvC66wbnVeY_jd7kQzIplHhy-oltSqAG_INSKpf29_9gtGdDPzv9d7BAsrRcQwVT_Vvpbx8DRe6WUfgvwb4RR-hZ6xSH0YrJsPAQ",
+            expect.string(jwk.kty).toEqual("RSA");
+            expect.string(jwk.e).toEqual("AQAB");
+            expect.string(jwk.n).toEqual(
+              "6Po23xJipEyBfVwrBq68rID8NISgv3RkLRtwz6YmddIvzt4KR7kQbRekTvgZ7YDnCDKtr-lwbivX6_tR_9klp8BKCtk7rWuouNhaOA5mtfwp80ztfdqqGy250KMqyO1fD7mKMfQfR7WMe-W1ygNOG2YlSzhGODGpE2FSz6dcHlOTa5AJHEvor1723EkvD8FjqolJTOtlvbUg9D9HWYHTtMOtiiKST9rRFacB7A-ppzzn8heiB_qc5UQ4gbw1i7pqcKzwqzaEaHwBrv3CDZ28wwZNxytr97u3hGaRH2NSwB6Ohf7moj0-fQ0uY9UZcaFKr3vGqFH_Noo5kVm5zFtdJQ",
+            );
+            // TODO: Figure if we want to do the same as Panva with kid
+            expect.string(jwk.kid).toEqual("Yivu3QTFD7-Dkkd6dlKdhOCpfWg=");
+          }
+        );
+      }
+    )
+  });
+
+  test("Roundtrip", ({expect}) => {
+    Jose.Jwk.Pub.of_pub_pem(rsa_test_pub)
+    |> CCResult.flat_map(Jose.Jwk.Pub.to_pub_pem)
+    |> CCResult.get_exn
+    |> (
+      pub_cert => {
+        expect.string(pub_cert).toEqual(rsa_test_pub);
+      }
+    )
+  });
+});
+
+describe("JWK.Priv", ({test}) => {
+  test("Creates a correct jwt from pem", ({expect}) => {
+    Jose.Jwk.Priv.of_priv_pem(rsa_test_priv)
+    |> (
+      r => {
+        open Jose.Jwk.Priv;
+        expect.result(r).toBeOk();
+
+        CCResult.get_exn(r)
+        |> (
+          jwk => {
+            expect.string(jwk.kty).toEqual("RSA");
+            expect.string(jwk.e).toEqual("AQAB");
+            expect.string(jwk.n).toEqual(
+              "6Po23xJipEyBfVwrBq68rID8NISgv3RkLRtwz6YmddIvzt4KR7kQbRekTvgZ7YDnCDKtr-lwbivX6_tR_9klp8BKCtk7rWuouNhaOA5mtfwp80ztfdqqGy250KMqyO1fD7mKMfQfR7WMe-W1ygNOG2YlSzhGODGpE2FSz6dcHlOTa5AJHEvor1723EkvD8FjqolJTOtlvbUg9D9HWYHTtMOtiiKST9rRFacB7A-ppzzn8heiB_qc5UQ4gbw1i7pqcKzwqzaEaHwBrv3CDZ28wwZNxytr97u3hGaRH2NSwB6Ohf7moj0-fQ0uY9UZcaFKr3vGqFH_Noo5kVm5zFtdJQ",
+            );
+            expect.string(jwk.d).toEqual(
+              "ELnN8KvgOw1nCnnweNVYpEXKVXbkF3qiqn5a1f2Gq1TAq-hS8p09qadV23mCWwOzEmqY_5URxkcNhFqRo32Sb32lkyvPVf7xqPuXVojqJMyKsnXmYu-s4LCis3DTZINuHLHkUvvEtyA4iriOGYetNthZexH6MJSYH9UP3eqU-XRBf3lw3oU-ZWJcnJiEvJa2H4haf70C0mFdTyKQQkops4QkgBEVIVtaVHXPgFnH1eh9uUSWlTiWqauWqe1h5jaEZbFAWPyanYAizLbGeQyOYf1N-0E4OsoRIiTQp1rRGfxUYO2mQelv2j15IXyQ8fZOCjvGEwiTQ6qn8g-UN4aFzQ",
+            );
+
+            expect.string(jwk.p).toEqual(
+              "-2qHZDGEvKfmuTednVYQtN7WTHEamChLrbE8AxuRXY6F6LvwzCR30e6MG-9YAaUmbX5gNeQbhYBxL13PjvLJGtig3AVCHzjtz77A92qeNc8AjGdgzMp4EpcnIJJx3c7EeAoge_w_85pCwVmDTr2VUSsQWIBB3H8ZIllazyo9EBs",
+            );
+
+            expect.string(jwk.q).toEqual(
+              "7TmfqxFLVsLtD0m-YIhewbeYiusvnAyPZBvKOSZ3LoIz-Vq0Sx_FYys7i-3092jZ1LtNqDgoOZqRZhlrtUF7lqRq3G34HecYN6jf2UhZY6psKC3U_N7lvIeA5_jCNDSUV2GWUB6-Bro8xqf2W_MmJVe0YKxacZkjvZDti2jkm78",
+            );
+
+            expect.string(jwk.dp).toEqual(
+              "g2kgEWesmKst9puyP32vx8o9usDXhLZzL_tWgc1UAtGu_oHVj-5zzn_gLe3BU0LOPibzBNgQ5ovHHVnsVixinyyhj78T25v2-UIcPHY28asb_0c9mm0tq5Hj-qtw5t3fZVrttcCYcKytvcAa2PpQ5JccuRV411Z7fa-0vlm2hwc",
+            );
+
+            expect.string(jwk.dq).toEqual(
+              "EJXkyesNn2VFebooK0udhGG3so6652ghZlhjDRfZYVENHTPwQwhXnpVZNnFOnTWhdTQbO9WhSlW6MK86TpPjdibMqdiubjjIAqw16lUamtNBeJWrvHpBCatXoeBMg6XhcTKLddKQapv-v8zido9LbXTyUYf7UtHoI8rMMOEGirU",
+            );
+
+            expect.string(jwk.qi).toEqual(
+              "he-6Edm5Olb5LteixSjc4sSLdejdlLg0dWIqEUxBNCAq2g7crjJaAFOHeq7anwSFq9mllBYO7YsYhKM-lbW8pgWkTYrJqFImZ9nbVTOyvChoy67LfWSCBF5O3XIQmb8KdMMaKGAIuooCLfz0YboRAFoxIVc44OJ6X7kx1ByPjVs",
             );
           }
         );
@@ -69,12 +157,12 @@ describe("JWK", ({test}) => {
   });
 
   test("Roundtrip", ({expect}) => {
-    Jose.Jwk.Pub.of_pub_pem(rsa_test_pub_2)
+    Jose.Jwk.Priv.of_priv_pem(rsa_test_priv)
+    |> CCResult.flat_map(Jose.Jwk.Priv.to_priv_pem)
     |> CCResult.get_exn
-    |> Jose.Jwk.Pub.to_pub_pem
     |> (
       pub_cert => {
-        expect.string(pub_cert).toMatch(rsa_test_pub_2);
+        expect.string(pub_cert).toEqual(rsa_test_priv);
       }
     )
   });

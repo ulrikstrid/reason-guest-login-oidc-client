@@ -11,13 +11,13 @@ module Pub : sig
 
   val empty : t
 
-  val to_pub : t -> Nocrypto.Rsa.pub
+  val to_pub : t -> (Nocrypto.Rsa.pub, [ `Msg of string ]) result
 
   val of_pub : Nocrypto.Rsa.pub -> (t, [ `Msg of string ]) result
 
   val of_pub_pem : string -> (t, [ `Msg of string ]) result
 
-  val to_pub_pem : t -> string
+  val to_pub_pem : t -> (string, [ `Msg of string ]) result
 
   val to_json : t -> Yojson.Basic.t
 
@@ -27,7 +27,7 @@ module Pub : sig
 end
 
 module Priv : sig
-  type public_key = {
+  type t = {
     kty : string;
     n : string;
     e : string;
@@ -40,4 +40,12 @@ module Priv : sig
     alg : string option;
     kid : string;
   }
+
+  val of_priv : Nocrypto.Rsa.priv -> (t, [ `Msg of string ]) result
+
+  val to_priv : t -> (Nocrypto.Rsa.priv, [ `Msg of string ]) result
+
+  val of_priv_pem : string -> (t, [ `Msg of string ]) result
+
+  val to_priv_pem : t -> (string, [ `Msg of string ]) result
 end
