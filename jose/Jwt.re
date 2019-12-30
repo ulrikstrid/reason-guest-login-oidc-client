@@ -28,8 +28,8 @@ let header_to_string = header => {
     };
 
   `Assoc([
-    ("alg", `String(alg)),
     ("typ", `String(typ)),
+    ("alg", `String(alg)),
     ("kid", `String(header.kid)),
   ])
   |> Yojson.Basic.to_string
@@ -37,15 +37,16 @@ let header_to_string = header => {
 };
 
 let string_to_header = header_str => {
-  let to_alg = alg =>
+  let to_alg = alg => {
     switch (alg) {
     | "RS256" => `RSA
     | _ => `Unknown
     };
+  };
 
   let to_typ = typ =>
     switch (typ) {
-    | "JWT" => `JWT
+    | Some("JWT") => `JWT
     | _ => `Unknown
     };
 
@@ -60,7 +61,7 @@ let string_to_header = header_str => {
              |> to_alg,
            typ:
              Yojson.Basic.Util.member("typ", json)
-             |> Yojson.Basic.Util.to_string
+             |> Yojson.Basic.Util.to_string_option
              |> to_typ,
            kid:
              Yojson.Basic.Util.member("kid", json)
@@ -105,15 +106,17 @@ let sign = (header, key, payload) => {
   let payload_str = payload_to_string(payload);
 
   CCResult.both(header_str, payload_str)
-  |> CCResult.map(((header_str, payload_str)) => {
+  |> CCResult.flat_map(((header_str, payload_str)) => {
        let input_str = header_str ++ "." ++ payload_str;
 
-       let signature =
-         `Message(Cstruct.of_string(input_str))
-         |> Nocrypto.Rsa.PKCS1.sign(~hash=`SHA256, ~key)
-         |> Cstruct.to_string;
-
-       {header, header_str, payload, payload_str, signature};
+       `Message(Cstruct.of_string(input_str))
+       |> Nocrypto.Rsa.PKCS1.sign(~hash=`SHA256, ~key)
+       |> Cstruct.to_string
+       |> base64_url_encode
+       |> CCResult.map(sign => (header_str, payload_str, sign));
+     })
+  |> CCResult.map(((header_str, payload_str, signature)) => {
+       {header, header_str, payload, payload_str, signature}
      });
 };
 
@@ -153,26 +156,19 @@ let pkcs1_sig = (asn1, body) => {
   };
 };
 
-let verify_internal = (~n, ~e, t) => {
-  open Nocrypto.Numeric;
+let verify_internal = (~pub_key, t) => {
+  let signature = t.signature |> base64_url_decode |> CCResult.get_exn |> Cstruct.of_string;
 
-  let signature = Cstruct.of_string(t.signature);
-  /* TODO: Move to Jwk module */
-  let n = n |> Cstruct.of_string |> Z.of_cstruct_be;
-  let e = e |> Cstruct.of_string |> Z.of_cstruct_be;
+  let input_str = t.header_str ++ "." ++ t.payload_str;
 
-  switch (Nocrypto.Rsa.PKCS1.sig_decode(~key={n, e}, signature)) {
+  switch (Nocrypto.Rsa.PKCS1.sig_decode(~key=pub_key, signature)) {
   | None => Error(`Msg("Could not decode signature"))
   | Some(message) =>
     switch (pkcs1_sig(sha256_asn1, message)) {
     | None => Error(`Msg("PKCS something something, I must understand this"))
     | Some(decrypted_sign) =>
       let token_hash =
-        t.header_str
-        ++ "."
-        ++ t.payload_str
-        |> Cstruct.of_string
-        |> Nocrypto.Hash.SHA256.digest;
+        input_str |> Cstruct.of_string |> Nocrypto.Hash.SHA256.digest;
       Ok(Cstruct.equal(decrypted_sign, token_hash));
     }
   };
@@ -202,16 +198,14 @@ let verify = (~jwks: list(Jwk.Pub.t), t) => {
          | None => Error(`Msg("Did not find key with correct kid"))
        )
      )
-  |> CCResult.flat_map((jwk: Jwk.Pub.t) =>
-       CCResult.both(base64_url_decode(jwk.n), base64_url_decode(jwk.e))
-     )
-  |> CCResult.flat_map(((n, e)) => verify_internal(~n, ~e, t))
+  |> CCResult.flat_map(Jwk.Pub.to_pub)
+  |> CCResult.flat_map(pub_key => verify_internal(~pub_key, t))
   |> CCResult.flat_map(_ => {
        module Json = Yojson.Basic.Util;
        switch (Json.member("exp", payload) |> Json.to_int_option) {
        | Some(exp) when exp > int_of_float(Unix.time()) => Ok(t)
        | Some(_exp) => Error(`Msg("Token expired"))
-       | None => Error(`Msg({|No "exp" key found|}))
+       | None => Ok(t)
        };
      });
 };

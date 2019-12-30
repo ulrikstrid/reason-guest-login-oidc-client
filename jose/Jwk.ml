@@ -4,9 +4,9 @@ module Util = struct
 
   let get_JWK_modulus n =
     Z.to_bits n |> CCString.rev |> trim_leading_null
-    |> Base64.encode ~pad:false ~alphabet:Base64.uri_safe_alphabet
+    |> Base64.encode ~pad:true ~alphabet:Base64.uri_safe_alphabet
 
-  let get_JWK_exponent e =
+  let get_JWK_component e =
     Z.to_bits e |> CCString.rev |> trim_leading_null
     |> Base64.encode ~pad:false ~alphabet:Base64.uri_safe_alphabet
 
@@ -19,11 +19,11 @@ module Util = struct
     |> Base64.encode ~pad:false ~alphabet:Base64.uri_safe_alphabet ~len:20
 
   let get_modulus n =
-    Base64.decode ~pad:false ~alphabet:Base64.uri_safe_alphabet n
+    Base64.decode ~pad:true ~alphabet:Base64.uri_safe_alphabet n
     |> CCResult.map (fun x ->
            CCString.pad 128 ~c:'\000' x |> CCString.rev |> Z.of_bits)
 
-  let get_exponent e =
+  let get_component e =
     Base64.decode ~pad:false ~alphabet:Base64.uri_safe_alphabet e
     |> CCResult.map (fun x ->
            CCString.pad 8 ~c:'\000' x |> CCString.rev |> Z.of_bits)
@@ -46,7 +46,7 @@ module Pub = struct
 
   let to_pub (t : t) : (Nocrypto.Rsa.pub, [ `Msg of string ]) result =
     let n = Util.get_modulus t.n in
-    let e = Util.get_exponent t.e in
+    let e = Util.get_component t.e in
     match (e, n) with
     | Ok e, Ok n -> Ok { e; n }
     | _ -> Error (`Msg "Could not decode JWK")
@@ -54,7 +54,7 @@ module Pub = struct
   let of_pub (rsa_pub : Nocrypto.Rsa.pub) : (t, [ `Msg of string ]) result =
     let public_key : X509.Public_key.t = `RSA rsa_pub in
     let n = Util.get_JWK_modulus rsa_pub.n in
-    let e = Util.get_JWK_exponent rsa_pub.e in
+    let e = Util.get_JWK_component rsa_pub.e in
     let kid = Util.get_JWK_kid (X509.Public_key.id public_key) in
     let x5t = Util.get_JWK_x5t (X509.Public_key.fingerprint public_key) in
     match (n, e, x5t) with
@@ -141,13 +141,13 @@ module Priv = struct
 
   let of_priv (rsa_priv : Nocrypto.Rsa.priv) =
     let n = Util.get_JWK_modulus rsa_priv.n in
-    let e = Util.get_JWK_exponent rsa_priv.e in
-    let d = Util.get_JWK_modulus rsa_priv.d in
-    let p = Util.get_JWK_exponent rsa_priv.p in
-    let q = Util.get_JWK_modulus rsa_priv.q in
-    let dp = Util.get_JWK_exponent rsa_priv.dp in
-    let dq = Util.get_JWK_modulus rsa_priv.dq in
-    let qi = Util.get_JWK_exponent rsa_priv.q' in
+    let e = Util.get_JWK_component rsa_priv.e in
+    let d = Util.get_JWK_component rsa_priv.d in
+    let p = Util.get_JWK_component rsa_priv.p in
+    let q = Util.get_JWK_component rsa_priv.q in
+    let dp = Util.get_JWK_component rsa_priv.dp in
+    let dq = Util.get_JWK_component rsa_priv.dq in
+    let qi = Util.get_JWK_component rsa_priv.q' in
 
     match (n, e, d, p, q, dp, dq, qi) with
     | Ok n, Ok e, Ok d, Ok p, Ok q, Ok dp, Ok dq, Ok qi ->
@@ -169,13 +169,13 @@ module Priv = struct
 
   let to_priv (t : t) : (Nocrypto.Rsa.priv, [ `Msg of string ]) result =
     let n = Util.get_modulus t.n in
-    let e = Util.get_exponent t.e in
-    let d = Util.get_modulus t.d in
-    let p = Util.get_exponent t.p in
-    let q = Util.get_modulus t.q in
-    let dp = Util.get_exponent t.dp in
-    let dq = Util.get_modulus t.dq in
-    let qi = Util.get_exponent t.qi in
+    let e = Util.get_component t.e in
+    let d = Util.get_component t.d in
+    let p = Util.get_component t.p in
+    let q = Util.get_component t.q in
+    let dp = Util.get_component t.dp in
+    let dq = Util.get_component t.dq in
+    let qi = Util.get_component t.qi in
     match (n, e, d, p, q, dp, dq, qi) with
     | Ok n, Ok e, Ok d, Ok p, Ok q, Ok dp, Ok dq, Ok qi ->
         Ok { e; n; d; p; q; dp; dq; q' = qi }

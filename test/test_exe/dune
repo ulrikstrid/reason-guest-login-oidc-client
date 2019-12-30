@@ -2,4 +2,4 @@
  (name RunTests)
  (package guest_login)
  (public_name RunTests.exe)
- (libraries guest_login.framework guest_login.jwk))
+ (libraries guest_login.framework guest_login.jose_test guest_login.oidc_test))

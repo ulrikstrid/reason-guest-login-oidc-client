@@ -1,6 +1,0 @@
-(library
- (name guest_login)
- (public_name guest_login.jwk)
- (libraries guest_login.jose guest_login.oidc guest_login.library
-   guest_login.framework rely.lib nocrypto x509 cstruct)
- (flags -linkall -g -w -9))
