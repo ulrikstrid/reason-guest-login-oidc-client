@@ -11,7 +11,7 @@ RUN npm install -g --unsafe-perm @esy-nightly/esy
 
 # now that we have esy installed we need a proper runtime
 
-FROM alpine:3.8 as esy
+FROM alpine:3.8 as builder
 
 ENV TERM=dumb LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib
 
