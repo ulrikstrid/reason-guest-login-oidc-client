@@ -1,6 +1,6 @@
 (library
  (name guest_login_oidc_test)
  (public_name guest_login.oidc_test)
- (libraries guest_login.jose guest_login.oidc guest_login.library
+ (libraries jose guest_login.oidc guest_login.library
    guest_login.framework rely.lib)
  (flags -linkall -g -w -9))

@@ -33,14 +33,14 @@ let make = (req_uri, request) => {
   let jwks_response_body = body_to_string(jwks_response.body);
   let token_response_body = body_to_string(token_response.body);
 
-  let jwks = Jose.Jwks.from_string(jwks_response_body);
+  let jwks = Jose.Jwks.of_string(jwks_response_body);
   let _valid_token =
     token_response_body
     |> Yojson.Basic.from_string
     |> Yojson.Basic.Util.member("id_token")
     |> Yojson.Basic.Util.to_string
-    |> Jose.Jwt.from_string
-    |> CCResult.flat_map(Jose.Jwt.verify(~jwks=jwks.keys));
+    |> Jose.Jwt.of_string
+    |> CCResult.flat_map(Jose.Jwt.validate(~jwks));
 
   let state =
     Uri.get_query_param(req_uri, "state") |> CCOpt.get_or(~default="state");

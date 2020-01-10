@@ -1,4 +1,4 @@
 (library
  (name Oidc)
  (public_name guest_login.oidc)
- (libraries lwt logs uri yojson str containers guest_login.jose))
+ (libraries lwt logs uri yojson str containers jose))
