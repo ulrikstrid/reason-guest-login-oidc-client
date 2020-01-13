@@ -35,7 +35,7 @@
   },
   "resolutions": {
     "@reason-native-web/jose": "ulrikstrid/reason-jose:package.json#f6cc09a8d52326ee83981b073e6c8ee56515fec9",
-    "@opam/conf-libssl": "esy-packages/esy-openssl#860ad7f",
+    "@opam/conf-libssl": "esy-packages/esy-openssl#648930f",
     "@esy-ocaml/reason": "facebook/reason:reason.json#ede1f25c895ac9c6a93f7d3c87a19eaa8de366f0",
     "@opam/nocrypto": "mirleft/ocaml-nocrypto:nocrypto.opam#80b7b4b9bd1ccfba3ec93d85cd82bfb3dc10f887",
     "@reason-native-web/morph": "reason-native-web/morph:morph.json#e03f189836d2851ca4e52bfd6310fd6edc00279e",
